@@ -1,0 +1,342 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom,
+    IsLocallyNoetherian, IsNoetherian, NoetherianSpace, IsNoetherianRing,
+    QuasiCompact, QuasiSeparatedSpace},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Noetherian Schemes in Mathlib4\\
+\large A Companion to \texttt{Noetherian.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{Noetherian.lean} file in Mathlib4. The file develops the theory of Noetherian schemes, which are fundamental objects in algebraic geometry that exhibit finite generation properties. Noetherian schemes generalize the classical concept of Noetherian varieties and are essential for many foundational results in scheme theory, including the existence of finite stratifications and the finiteness of various geometric invariants.
+
+The Noetherian property captures the idea that algebraic objects defined by finitely many equations should satisfy various finiteness conditions, making them amenable to computational and theoretical analysis.
+
+\section{Locally Noetherian Schemes}
+
+\subsection{Definition}
+
+\begin{lstlisting}
+class IsLocallyNoetherian (X : Scheme) : Prop where
+  component_noetherian : ∀ (U : X.affineOpens),
+    IsNoetherianRing Γ(X, U) := by infer_instance
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} A scheme $X$ is locally Noetherian if the ring of sections over every affine open subset is a Noetherian ring. This condition ensures that locally, the scheme behaves like the spectrum of a Noetherian ring, which has many desirable finiteness properties.
+
+In classical algebraic geometry, this corresponds to varieties that can be covered by open sets each isomorphic to closed subvarieties of affine space defined by finitely many polynomial equations, where the coordinate rings satisfy the ascending chain condition on ideals.
+
+\subsection{Key Localization Lemma}
+
+\begin{lstlisting}
+theorem isNoetherianRing_of_away : IsNoetherianRing R := by
+  apply monotone_stabilizes_iff_noetherian.mp
+  intro I
+  let floc s := algebraMap R (Away (M := R) s)
+  let suitableN s :=
+    { n : ℕ | ∀ m : ℕ, n ≤ m → (Ideal.map (floc s) (I n)) = (Ideal.map (floc s) (I m)) }
+  let minN s := sInf (suitableN s)
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} This is the key technical lemma establishing that if $R$ is a ring and $\{f_i\}$ is a finite collection of elements generating the unit ideal, then $R$ is Noetherian if and only if each localization $R_{f_i}$ is Noetherian. This result is fundamental to the local-global principle for the Noetherian property.
+
+The proof follows Hartshorne's approach and is crucial for showing that local Noetherian conditions can be globalized to the entire scheme.
+
+\subsection{Characterization via Covers}
+
+\begin{lstlisting}
+theorem isLocallyNoetherian_iff_of_affine_openCover (𝒰 : Scheme.OpenCover.{v, u} X)
+    [∀ i, IsAffine (𝒰.obj i)] :
+    IsLocallyNoetherian X ↔ ∀ (i : 𝒰.J), IsNoetherianRing Γ(𝒰.obj i, ⊤) := by
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} A scheme is locally Noetherian if and only if it admits an affine open cover where each component has Noetherian ring of global sections. This provides a practical criterion for verifying the locally Noetherian property and shows that it can be checked on any affine cover.
+
+This characterization is essential because it allows us to verify Noetherian properties by examining a finite amount of algebraic data (the rings of sections over the cover components).
+
+\section{Geometric Consequences}
+
+\subsection{Quasi-Compactness of Open Immersions}
+
+\begin{lstlisting}
+@[stacks 01OX]
+instance (priority := 100) {Z : Scheme} [IsLocallyNoetherian X]
+    {f : Z ⟶ X} [IsOpenImmersion f] : QuasiCompact f := by
+  apply (quasiCompact_iff_forall_affine f).mpr
+  intro U hU
+  rw [Opens.map_coe, ← Set.preimage_inter_range]
+  apply f.isOpenEmbedding.isInducing.isCompact_preimage'
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} Any open immersion into a locally Noetherian scheme is quasi-compact. This is a fundamental result showing that Noetherian conditions impose strong compactness constraints on the geometry.
+
+Geometrically, this means that any open subset of a locally Noetherian scheme, when viewed as a scheme itself, has the property that its morphisms to other schemes have compact fibers over affine open sets.
+
+\subsection{Quasi-Separated Property}
+
+\begin{lstlisting}
+@[stacks 01OY]
+instance (priority := 100) IsLocallyNoetherian.quasiSeparatedSpace [IsLocallyNoetherian X] :
+    QuasiSeparatedSpace X := by
+  apply (quasiSeparatedSpace_iff_affine X).mpr
+  intro U V
+  have hInd := U.2.fromSpec.isOpenEmbedding.isInducing
+  apply (hInd.isCompact_preimage_iff ?_).mp
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} Every locally Noetherian scheme is quasi-separated, meaning that the intersection of any two affine open sets is quasi-compact. This separation property is crucial for many geometric constructions and ensures that the scheme has well-behaved intersection properties.
+
+This result establishes that Noetherian conditions automatically provide good separation properties, which are essential for defining and working with various scheme-theoretic constructions like proper morphisms and coherent sheaves.
+
+\section{Noetherian Schemes}
+
+\subsection{Definition}
+
+\begin{lstlisting}
+@[mk_iff]
+class IsNoetherian (X : Scheme) : Prop extends IsLocallyNoetherian X, CompactSpace X
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} A scheme is Noetherian if it is both locally Noetherian and quasi-compact as a topological space. This combines the local finiteness condition with a global compactness requirement, ensuring that the scheme can be covered by finitely many affine Noetherian opens.
+
+Noetherian schemes are the scheme-theoretic generalization of affine varieties over Noetherian rings and inherit many of their good finiteness properties.
+
+\subsection{Finite Cover Characterization}
+
+\begin{lstlisting}
+theorem isNoetherian_iff_of_finite_affine_openCover {𝒰 : Scheme.OpenCover.{v, u} X}
+    [Finite 𝒰.J] [∀ i, IsAffine (𝒰.obj i)] :
+    IsNoetherian X ↔ ∀ (i : 𝒰.J), IsNoetherianRing Γ(𝒰.obj i, ⊤) := by
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} A scheme is Noetherian if and only if it admits a finite affine open cover where each component has Noetherian ring of global sections. This provides the most practical criterion for recognizing Noetherian schemes.
+
+This characterization shows that Noetherian schemes are exactly those that can be constructed by gluing finitely many spectra of Noetherian rings, making them very concrete and computable objects.
+
+\subsection{Topological Noetherian Property}
+
+\begin{lstlisting}
+@[stacks 01OZ]
+instance (priority := 100) IsNoetherian.noetherianSpace [IsNoetherian X] :
+    NoetherianSpace X := by
+  apply TopologicalSpace.noetherian_univ_iff.mp
+  let 𝒰 := X.affineCover.finiteSubcover
+  rw [← 𝒰.iUnion_range]
+  suffices ∀ i : 𝒰.J, NoetherianSpace (Set.range <| (𝒰.map i).base) by
+    apply NoetherianSpace.iUnion
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} Every Noetherian scheme has a Noetherian underlying topological space. This means that every descending chain of closed subsets eventually stabilizes, providing strong finiteness conditions on the closed subvarieties of the scheme.
+
+This topological Noetherian property is fundamental for many applications, including the existence of finite stratifications and the finiteness of irreducible components.
+
+\section{Affine Case}
+
+\subsection{Correspondence with Noetherian Rings}
+
+\begin{lstlisting}
+instance {R : CommRingCat} [IsNoetherianRing R] :
+    IsLocallyNoetherian (Spec R) := by
+  apply isLocallyNoetherian_of_affine_cover
+    (ι := Fin 1) (S := fun _ => ⟨⊤, isAffineOpen_top (Spec R)⟩)
+  · exact iSup_const
+  · intro
+    apply isNoetherianRing_of_ringEquiv R
+    apply CategoryTheory.Iso.commRingCatIsoToRingEquiv
+    exact (Scheme.ΓSpecIso R).symm
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} If $R$ is a Noetherian ring, then $\mathrm{Spec}(R)$ is a Noetherian scheme. This establishes the fundamental dictionary between Noetherian rings and Noetherian schemes in the affine case.
+
+\begin{lstlisting}
+theorem isNoetherian_Spec {R : CommRingCat} :
+    IsNoetherian (Spec R) ↔ IsNoetherianRing R :=
+  ⟨fun _ => inferInstance,
+   fun _ => inferInstance⟩
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} For affine schemes, being Noetherian is equivalent to the corresponding ring being Noetherian. This provides the direct translation between the geometric and algebraic Noetherian conditions.
+
+\section{Stalks and Local Properties}
+
+\subsection{Noetherian Stalks}
+
+\begin{lstlisting}
+instance [IsLocallyNoetherian X] {x : X} : IsNoetherianRing (X.presheaf.stalk x) := by
+  obtain ⟨U, hU, hU2, hU3⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := x) (by aesop)
+  have := AlgebraicGeometry.IsAffineOpen.isLocalization_stalk hU ⟨x, hU2⟩
+  exact @IsLocalization.isNoetherianRing _ _ (hU.primeIdealOf ⟨x, hU2⟩).asIdeal.primeCompl
+        (X.presheaf.stalk x) _ (X.presheaf.algebra_section_stalk ⟨x, hU2⟩)
+        this (IsLocallyNoetherian.component_noetherian ⟨U, hU⟩)
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} In a locally Noetherian scheme, every stalk is a Noetherian ring. This provides the local algebraic foundation for the Noetherian property and shows that the geometric condition translates to strong algebraic finiteness properties at every point.
+
+The Noetherian property of stalks is crucial for many local-to-global arguments in algebraic geometry and ensures that various module-theoretic constructions behave well.
+
+\section{Finite Irreducible Components}
+
+\subsection{Finiteness Result}
+
+\begin{lstlisting}
+@[stacks 0BA8]
+theorem finite_irreducibleComponents_of_isNoetherian [IsNoetherian X] :
+    (irreducibleComponents X).Finite := NoetherianSpace.finite_irreducibleComponents
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} A Noetherian scheme has only finitely many irreducible components. This is one of the most important consequences of the Noetherian property, providing a fundamental finiteness result for the geometric decomposition of schemes.
+
+This finiteness is essential for many applications:
+\begin{itemize}
+\item It allows for finite inductive arguments on the components
+\item It ensures that various invariants (like dimension) are well-defined
+\item It provides the foundation for intersection theory and numerical invariants
+\end{itemize}
+
+\section{Global Geometric Significance}
+
+The Noetherian property for schemes captures several fundamental finiteness concepts from classical algebraic geometry:
+
+\begin{itemize}
+\item \textbf{Finite Generation}: The coordinate rings are finitely generated over their base rings, ensuring computational tractability.
+
+\item \textbf{Ascending Chain Condition}: Every chain of ideals (corresponding to descending chains of closed subschemes) eventually stabilizes, providing strong structural constraints.
+
+\item \textbf{Finite Decomposition}: The scheme has finitely many irreducible components, allowing for finite inductive arguments and well-defined numerical invariants.
+
+\item \textbf{Quasi-Compactness}: The scheme can be covered by finitely many affine opens, making it amenable to algebraic analysis.
+
+\item \textbf{Coherence Properties}: Many sheaf-theoretic constructions (like coherent sheaves) behave well on Noetherian schemes, providing the foundation for advanced algebraic geometry.
+\end{itemize}
+
+The theory developed in this file shows that these classical finiteness properties can be systematically generalized to the scheme-theoretic setting, preserving their essential geometric content while extending their applicability to more general algebraic objects.
+
+Noetherian schemes form the natural setting for much of modern algebraic geometry, as they retain the computational and theoretical tractability of classical varieties while allowing for the additional flexibility provided by scheme theory.
+
+\end{document}

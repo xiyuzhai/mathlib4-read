@@ -1,0 +1,414 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom,
+    pullback, PullbackCone, OpenCover, IsFinite, QuasiCompact, IsPreimmersion,
+    JacobsonSpace, LocallyOfFiniteType, DiscreteTopology, fiber, residueField},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+           {κ}{{$\kappa$}}1
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Scheme-Theoretic Fibers in Mathlib4\\
+\large A Companion to \texttt{Fiber.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{Fiber.lean} file in Mathlib4. The file develops the theory of scheme-theoretic fibers, which are fundamental objects in algebraic geometry that capture the "local structure" of morphisms at individual points. Fibers provide crucial information about the geometric and arithmetic properties of morphisms.
+
+\section{Basic Definitions}
+
+\subsection{The Scheme-Theoretic Fiber}
+
+\begin{lstlisting}
+def Scheme.Hom.fiber (f : X.Hom Y) (y : Y) : Scheme := pullback f (Y.fromSpecResidueField y)
+\end{lstlisting}
+
+\textbf{Natural Language:} The fiber of a morphism $f: X \to Y$ at a point $y \in Y$ is defined as the pullback (fibered product) of $f$ with the canonical morphism $\mathrm{Spec}(\kappa(y)) \to Y$, where $\kappa(y)$ is the residue field at $y$.
+
+This captures the intuitive idea that the fiber consists of all points in $X$ that map to $y$, together with their "infinitesimal neighborhoods" encoded by the residue field structure.
+
+\subsection{Fiber Inclusion}
+
+\begin{lstlisting}
+def Scheme.Hom.fiberι (f : X.Hom Y) (y : Y) : f.fiber y ⟶ X := pullback.fst _ _
+\end{lstlisting}
+
+\textbf{Natural Language:} The fiber inclusion $f.fiberι\, y: f.fiber\, y \to X$ embeds the fiber as a subscheme of $X$. This morphism allows us to view the fiber as sitting naturally inside the domain of $f$.
+
+\subsection{Fiber to Residue Field}
+
+\begin{lstlisting}
+def Scheme.Hom.fiberToSpecResidueField (f : X.Hom Y) (y : Y) :
+    f.fiber y ⟶ Spec (Y.residueField y) :=
+  pullback.snd _ _
+\end{lstlisting}
+
+\textbf{Natural Language:} There is a canonical morphism from the fiber to $\mathrm{Spec}(\kappa(y))$, making the fiber naturally a $\kappa(y)$-scheme. This captures the algebraic structure of the fiber over the residue field.
+
+\section{Topological Properties}
+
+\subsection{Range Characterization}
+
+\begin{lstlisting}
+lemma Scheme.Hom.range_fiberι (f : X.Hom Y) (y : Y) :
+    Set.range (f.fiberι y).base = f.base ⁻¹' {y}
+\end{lstlisting}
+
+\textbf{Natural Language:} The underlying topological space of the fiber $f.fiber\, y$ corresponds exactly to the set-theoretic fiber $f^{-1}(\{y\}) \subseteq X$. This shows that the scheme-theoretic fiber has the correct underlying point set.
+
+\subsection{Homeomorphism with Set-Theoretic Fiber}
+
+\begin{lstlisting}
+def Scheme.Hom.fiberHomeo (f : X.Hom Y) (y : Y) : f.fiber y ≃ₜ f.base ⁻¹' {y}
+\end{lstlisting}
+
+\textbf{Natural Language:} The scheme-theoretic fiber is homeomorphic to the set-theoretic fiber $f^{-1}(\{y\})$ as topological spaces. This establishes that the scheme structure on the fiber is compatible with the natural topology.
+
+\subsection{Points as Fiber Elements}
+
+\begin{lstlisting}
+def Scheme.Hom.asFiber (f : X.Hom Y) (x : X) : f.fiber (f.base x) :=
+    (f.fiberHomeo (f.base x)).symm ⟨x, rfl⟩
+\end{lstlisting}
+
+\textbf{Natural Language:} Any point $x \in X$ can be viewed as a point in the fiber of $f$ over $f(x)$. This gives a canonical way to think of points of $X$ as living in the appropriate fibers.
+
+\section{Morphism Properties}
+
+\subsection{Preimmersion Property}
+
+\begin{lstlisting}
+instance (f : X ⟶ Y) (y : Y) : IsPreimmersion (f.fiberι y)
+\end{lstlisting}
+
+\textbf{Natural Language:} The fiber inclusion is always a preimmersion, meaning it is locally of finite type and has geometrically reduced fibers. This is a fundamental property that ensures fibers have good geometric behavior.
+
+\section{Preservation of Properties}
+
+\subsection{Quasi-Compactness}
+
+\begin{lstlisting}
+instance (f : X ⟶ Y) [QuasiCompact f] (y : Y) : CompactSpace (f.fiber y)
+\end{lstlisting}
+
+\textbf{Natural Language:} If $f$ is quasi-compact, then each fiber is a compact topological space. This is a key result showing that quasi-compactness is preserved when passing to fibers.
+
+\begin{lstlisting}
+lemma QuasiCompact.isCompact_preimage_singleton (f : X ⟶ Y) [QuasiCompact f] (y : Y) :
+    IsCompact (f.base ⁻¹' {y})
+\end{lstlisting}
+
+\textbf{Natural Language:} For quasi-compact morphisms, the set-theoretic fiber $f^{-1}(\{y\})$ is compact as a subspace of $X$. This provides the topological foundation for the compactness of scheme-theoretic fibers.
+
+\subsection{Affine Property}
+
+\begin{lstlisting}
+instance (f : X ⟶ Y) [IsAffineHom f] (y : Y) : IsAffine (f.fiber y)
+\end{lstlisting}
+
+\textbf{Natural Language:} If $f$ is an affine morphism, then each fiber is an affine scheme. This shows that the affine property descends to fibers, which is crucial for many constructions in algebraic geometry.
+
+\subsection{Jacobson Property}
+
+\begin{lstlisting}
+instance (f : X ⟶ Y) (y : Y) [LocallyOfFiniteType f] : JacobsonSpace (f.fiber y)
+\end{lstlisting}
+
+\textbf{Natural Language:} Fibers of locally finite type morphisms are Jacobson spaces, meaning that every prime ideal is an intersection of maximal ideals. This is important for understanding the arithmetic properties of fibers.
+
+\section{Finite Morphisms and Discrete Fibers}
+
+\subsection{Finiteness of Fibers}
+
+\begin{lstlisting}
+instance (f : X ⟶ Y) (y : Y) [IsFinite f] : Finite (f.fiber y)
+\end{lstlisting}
+
+\textbf{Natural Language:} If $f$ is a finite morphism, then each fiber has only finitely many points. This is a fundamental property of finite morphisms that makes them algebraically tractable.
+
+\subsection{Finite Preimages}
+
+\begin{lstlisting}
+lemma IsFinite.finite_preimage_singleton (f : X ⟶ Y) [IsFinite f] (y : Y) :
+    (f.base ⁻¹' {y}).Finite
+\end{lstlisting}
+
+\textbf{Natural Language:} For finite morphisms, the set-theoretic fiber over any point is a finite set. This provides the topological foundation for the finiteness of scheme-theoretic fibers.
+
+\subsection{General Finite Preimages}
+
+\begin{lstlisting}
+lemma Scheme.Hom.finite_preimage (f : X.Hom Y) [IsFinite f] {s : Set Y} (hs : s.Finite) :
+    (f.base ⁻¹' s).Finite
+\end{lstlisting}
+
+\textbf{Natural Language:} Finite morphisms have the property that preimages of finite sets are finite. This extends the finiteness property from individual points to arbitrary finite subsets of the codomain.
+
+\subsection{Discrete Topology}
+
+\begin{lstlisting}
+instance Scheme.Hom.discrete_fiber (f : X ⟶ Y) (y : Y) [IsFinite f] :
+    DiscreteTopology (f.fiber y)
+\end{lstlisting}
+
+\textbf{Natural Language:} Fibers of finite morphisms carry the discrete topology. Since they are both finite and compact (being fibers of quasi-compact morphisms), they must be discrete.
+
+\section{Residue Field Structure}
+
+\subsection{Canonical Over-Structure}
+
+\begin{lstlisting}
+instance (f : X.Hom Y) (y : Y) : (f.fiber y).CanonicallyOver X where hom := f.fiberι y
+\end{lstlisting}
+
+\textbf{Natural Language:} The fiber naturally has the structure of an $X$-scheme via the fiber inclusion. This allows us to study the fiber in relation to the original domain scheme.
+
+\subsection{Residue Field Scheme Structure}
+
+\begin{lstlisting}
+@[reducible] def Scheme.Hom.fiberOverSpecResidueField
+    (f : X.Hom Y) (y : Y) : (f.fiber y).Over (Spec (Y.residueField y))
+\end{lstlisting}
+
+\textbf{Natural Language:} The fiber also has the structure of a scheme over $\mathrm{Spec}(\kappa(y))$, where $\kappa(y)$ is the residue field at $y$. This captures the algebraic relationship between the fiber and the base point.
+
+\subsection{Closed Point Property}
+
+\begin{lstlisting}
+lemma Scheme.Hom.fiberToSpecResidueField_apply (f : X.Hom Y) (y : Y) (x : f.fiber y) :
+    (f.fiberToSpecResidueField y).base x = IsLocalRing.closedPoint (Y.residueField y)
+\end{lstlisting}
+
+\textbf{Natural Language:} Under the morphism to $\mathrm{Spec}(\kappa(y))$, every point of the fiber maps to the unique closed point. This reflects the fact that $\kappa(y)$ is a field, so its spectrum has only one point.
+
+\section{Geometric Interpretation}
+
+\subsection{Local Structure}
+
+The scheme-theoretic fiber captures several important aspects:
+\begin{itemize}
+\item \textbf{Point-wise behavior}: Which points in $X$ map to a given point $y \in Y$
+\item \textbf{Infinitesimal structure}: How the morphism behaves in neighborhoods of these points
+\item \textbf{Algebraic structure}: The relationship between local rings and the residue field
+\item \textbf{Geometric multiplicities}: Information about ramification and branching
+\end{itemize}
+
+\subsection{Applications}
+
+Scheme-theoretic fibers are crucial for:
+\begin{itemize}
+\item \textbf{Flatness}: A morphism is flat if and only if all fibers are flat over the residue fields
+\item \textbf{Smoothness}: Smooth morphisms have smooth fibers
+\item \textbf{Proper morphisms}: Studying compactification and properness via fiber behavior
+\item \textbf{Dimension theory}: The dimension of fibers relates to the relative dimension
+\end{itemize}
+
+\section{Examples and Special Cases}
+
+\subsection{Affine Morphisms}
+
+For affine morphisms $f: X = \mathrm{Spec}(A) \to Y = \mathrm{Spec}(B)$ corresponding to a ring homomorphism $\phi: B \to A$:
+\begin{itemize}
+\item The fiber over a point $y$ corresponding to prime $\mathfrak{p} \subset B$ is $\mathrm{Spec}(A \otimes_B \kappa(\mathfrak{p}))$
+\item This connects to the tensor product construction in commutative algebra
+\end{itemize}
+
+\subsection{Finite Morphisms}
+
+For finite morphisms:
+\begin{itemize}
+\item Each fiber is a finite scheme (finitely many points)
+\item The points correspond to primes lying over the base prime
+\item Multiplicities are encoded in the scheme structure
+\end{itemize}
+
+\subsection{Smooth Morphisms}
+
+For smooth morphisms:
+\begin{itemize}
+\item All fibers are smooth schemes
+\item The dimension of fibers is constant (relative dimension)
+\item Local structure is particularly well-behaved
+\end{itemize}
+
+\section{Relationship to Classical Theory}
+
+\subsection{Algebraic Number Theory}
+
+In arithmetic geometry, fibers are closely related to:
+\begin{itemize}
+\item \textbf{Primes lying over}: Points in fibers correspond to primes lying over a given prime
+\item \textbf{Ramification}: The scheme structure encodes ramification information
+\item \textbf{Decomposition groups}: The fiber structure relates to Galois-theoretic decomposition
+\end{itemize}
+
+\subsection{Complex Algebraic Geometry}
+
+In the complex setting:
+\begin{itemize}
+\item Fibers over $\mathbb{C}$-points are complex varieties
+\item The topological structure relates to the analytic topology
+\item Proper morphisms give compact fibers
+\end{itemize}
+
+\section{Conclusion}
+
+The \texttt{Fiber.lean} file provides:
+
+\subsection{Foundational Definitions}
+\begin{itemize}
+\item Rigorous definition of scheme-theoretic fibers
+\item Connection to pullback constructions and residue fields
+\item Proper embedding of fibers into domain schemes
+\item Natural $\kappa(y)$-scheme structure
+\end{itemize}
+
+\subsection{Key Properties}
+\begin{itemize}
+\item Topological characterization via set-theoretic fibers
+\item Preservation of important morphism properties
+\item Finiteness and discreteness results for finite morphisms
+\item Compactness results for quasi-compact morphisms
+\end{itemize}
+
+\subsection{Geometric Applications}
+\begin{itemize}
+\item Tools for studying local properties of morphisms
+\item Foundation for flatness, smoothness, and properness
+\item Connection to classical algebraic and arithmetic geometry
+\item Framework for dimension theory and multiplicity
+\end{itemize}
+
+\subsection{Theoretical Significance}
+\begin{itemize}
+\item Bridges abstract scheme theory with concrete geometric intuition
+\item Provides computational tools for studying morphism properties
+\item Establishes the connection between global and local behavior
+\item Enables systematic study of families and moduli
+\end{itemize}
+
+The theory of scheme-theoretic fibers is fundamental to modern algebraic geometry, providing both conceptual clarity and practical tools for understanding the local and global structure of morphisms between schemes. This formalization in Mathlib4 makes these powerful techniques available for rigorous mathematical reasoning and computation.
+
+\end{document}

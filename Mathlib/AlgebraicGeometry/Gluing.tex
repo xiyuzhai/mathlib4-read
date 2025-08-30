@@ -1,0 +1,468 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom,
+    pullback, PullbackCone, OpenCover, GlueData, Multicoequalizer,
+    LocallyRingedSpace, SheafedSpace, PresheafedSpace},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Gluing Schemes in Mathlib4\\
+\large A Companion to \texttt{Gluing.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{Gluing.lean} file in Mathlib4. The file develops the theory of gluing schemes together from local pieces, which is fundamental to constructing global objects from local data. This includes both general gluing constructions and specialized "locally directed" gluing for certain well-behaved diagrams.
+
+\section{The Glue Data Structure}
+
+\subsection{Definition of Glue Data}
+
+\begin{lstlisting}
+structure GlueData extends CategoryTheory.GlueData Scheme where
+  f_open : ∀ i j, IsOpenImmersion (f i j)
+\end{lstlisting}
+
+\textbf{Natural Language:} A glue data for schemes consists of:
+\begin{enumerate}
+\item An index set $J$
+\item Schemes $U_i$ for each $i \in J$ (the pieces to be glued)
+\item Schemes $V_{ij}$ for each pair $(i,j)$ (the overlaps)
+\item Open immersions $f_{ij}: V_{ij} \to U_i$
+\item Transition maps $t_{ij}: V_{ij} \to V_{ji}$ 
+\item Compatibility conditions ensuring the gluing is well-defined
+\end{enumerate}
+
+The key additional requirement is that all the maps $f_{ij}$ are open immersions, preserving the geometric structure.
+
+\subsection{Glue Data Hierarchy}
+
+\begin{lstlisting}
+abbrev toLocallyRingedSpaceGlueData : LocallyRingedSpace.GlueData :=
+  { f_open := D.f_open
+    toGlueData := 𝖣.mapGlueData forgetToLocallyRingedSpace }
+\end{lstlisting}
+
+\textbf{Natural Language:} The gluing construction for schemes builds on gluing constructions for locally ringed spaces, sheafed spaces, and presheafed spaces. This hierarchical approach ensures that all the relevant structure is properly preserved.
+
+\section{The Glued Scheme Construction}
+
+\subsection{Implementation Details}
+
+\begin{lstlisting}
+def gluedScheme : Scheme := by
+  apply LocallyRingedSpace.IsOpenImmersion.scheme
+    D.toLocallyRingedSpaceGlueData.toGlueData.glued
+  intro x
+  obtain ⟨i, y, rfl⟩ := D.toLocallyRingedSpaceGlueData.ι_jointly_surjective x
+  refine ⟨_, ((D.U i).affineCover.map y).toLRSHom ≫
+    D.toLocallyRingedSpaceGlueData.toGlueData.ι i, ?_⟩
+  ...
+\end{lstlisting}
+
+\textbf{Natural Language:} The glued scheme is constructed by first creating the glued locally ringed space, then verifying that every point has an affine neighborhood. This uses the fact that each piece $U_i$ has an affine cover, and these covers can be transferred to the glued space.
+
+\subsection{Main Definition}
+
+\begin{lstlisting}
+abbrev glued : Scheme := 𝖣.glued
+\end{lstlisting}
+
+\textbf{Natural Language:} The glued scheme $D.glued$ is the result of gluing together all the schemes $U_i$ according to the glue data $D$.
+
+\section{Inclusion Morphisms}
+
+\subsection{The Inclusion Maps}
+
+\begin{lstlisting}
+abbrev ι (i : D.J) : D.U i ⟶ D.glued := 𝖣.ι i
+\end{lstlisting}
+
+\textbf{Natural Language:} For each index $i$, there is a canonical inclusion morphism $\iota_i: U_i \to D.glued$ that embeds the $i$-th piece into the glued scheme.
+
+\subsection{Open Immersion Property}
+
+\begin{lstlisting}
+instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i)
+\end{lstlisting}
+
+\textbf{Natural Language:} Each inclusion $\iota_i: U_i \to D.glued$ is an open immersion, meaning that $U_i$ appears as an open subscheme of the glued space.
+
+\subsection{Joint Surjectivity}
+
+\begin{lstlisting}
+theorem ι_jointly_surjective (x : 𝖣.glued.carrier) :
+    ∃ (i : D.J) (y : (D.U i).carrier), (D.ι i).base y = x
+\end{lstlisting}
+
+\textbf{Natural Language:} The inclusion maps are jointly surjective, meaning every point of the glued scheme comes from some piece $U_i$. This shows that the gluing covers the entire space.
+
+\section{Gluing Conditions}
+
+\subsection{Basic Glue Condition}
+
+\begin{lstlisting}
+@[simp (high), reassoc]
+theorem glue_condition (i j : D.J) : D.t i j ≫ D.f j i ≫ D.ι j = D.f i j ≫ D.ι i
+\end{lstlisting}
+
+\textbf{Natural Language:} The fundamental gluing condition states that the two ways of mapping from $V_{ij}$ to the glued space (via $U_i$ or via $U_j$) agree. This ensures that the overlaps are consistently identified.
+
+\subsection{Pullback Characterization}
+
+\begin{lstlisting}
+def vPullbackCone (i j : D.J) : PullbackCone (D.ι i) (D.ι j) :=
+  PullbackCone.mk (D.f i j) (D.t i j ≫ D.f j i) (by simp)
+
+def vPullbackConeIsLimit (i j : D.J) : IsLimit (D.vPullbackCone i j)
+\end{lstlisting}
+
+\textbf{Natural Language:} The overlap $V_{ij}$ is precisely the intersection $U_i \cap U_j$ in the glued space. This is expressed by saying that $V_{ij}$ with its maps to $U_i$ and $U_j$ forms a pullback square.
+
+\section{Topological Properties}
+
+\subsection{Carrier Isomorphism}
+
+\begin{lstlisting}
+def isoCarrier : D.glued.carrier ≅ (D_).glued
+\end{lstlisting}
+
+\textbf{Natural Language:} The underlying topological space of the glued scheme is isomorphic to the gluing of the underlying topological spaces of the pieces. This shows that the scheme-theoretic gluing correctly captures the topological gluing.
+
+\subsection{Point Identification}
+
+\begin{lstlisting}
+def Rel (a b : Σ i, ((D.U i).carrier : Type _)) : Prop :=
+  ∃ x : (D.V (a.1, b.1)).carrier, (D.f _ _).base x = a.2 ∧ (D.t _ _ ≫ D.f _ _).base x = b.2
+\end{lstlisting}
+
+\textbf{Natural Language:} Points $x \in U_i$ and $y \in U_j$ are identified in the glued space if and only if there exists a point in $V_{ij}$ that maps to $x$ under $f_{ij}$ and to $y$ under the composition $t_{ij} \circ f_{ji}$.
+
+\subsection{Open Set Characterization}
+
+\begin{lstlisting}
+theorem isOpen_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).base ⁻¹' U)
+\end{lstlisting}
+
+\textbf{Natural Language:} A subset of the glued space is open if and only if its preimage in each piece $U_i$ is open. This gives a practical criterion for checking openness in glued schemes.
+
+\section{Open Covers from Glue Data}
+
+\subsection{The Natural Cover}
+
+\begin{lstlisting}
+@[simps -isSimp]
+def openCover (D : Scheme.GlueData) : OpenCover D.glued where
+  J := D.J
+  obj := D.U
+  map := D.ι
+  f x := (D.ι_jointly_surjective x).choose
+  covers x := ⟨_, (D.ι_jointly_surjective x).choose_spec.choose_spec⟩
+\end{lstlisting}
+
+\textbf{Natural Language:} The pieces $U_i$ naturally form an open cover of the glued scheme $D.glued$, with the inclusion maps serving as the cover morphisms.
+
+\section{Gluing from Open Covers}
+
+\subsection{Cover to Glue Data}
+
+\begin{lstlisting}
+@[simps]
+def gluedCover : Scheme.GlueData.{u} where
+  J := 𝒰.J
+  U := 𝒰.obj
+  V := fun ⟨x, y⟩ => pullback (𝒰.map x) (𝒰.map y)
+  f _ _ := pullback.fst _ _
+  t _ _ := (pullbackSymmetry _ _).hom
+  ...
+\end{lstlisting}
+
+\textbf{Natural Language:} Given an open cover $\mathcal{U} = \{U_i\}$ of a scheme $X$, we can construct glue data where the overlaps $V_{ij}$ are the pullbacks (intersections) $U_i \times_X U_j$.
+
+\subsection{Recovery Isomorphism}
+
+\begin{lstlisting}
+def fromGlued : 𝒰.gluedCover.glued ⟶ X
+instance : IsIso 𝒰.fromGlued
+\end{lstlisting}
+
+\textbf{Natural Language:} The gluing of an open cover of $X$ is canonically isomorphic to $X$ itself. The canonical morphism $\mathcal{U}.gluedCover.glued \to X$ is an isomorphism.
+
+\section{Gluing Morphisms}
+
+\subsection{Compatible Morphism Gluing}
+
+\begin{lstlisting}
+def glueMorphisms (𝒰 : OpenCover.{v} X) {Y : Scheme.{u}} (f : ∀ x, 𝒰.obj x ⟶ Y)
+    (hf : ∀ x y, pullback.fst (𝒰.map x) (𝒰.map y) ≫ f x = pullback.snd _ _ ≫ f y) :
+    X ⟶ Y
+\end{lstlisting}
+
+\textbf{Natural Language:} Given morphisms $f_i: U_i \to Y$ that agree on overlaps (i.e., are compatible), we can glue them together to get a global morphism $X \to Y$.
+
+\subsection{Morphism Extension Property}
+
+\begin{lstlisting}
+theorem hom_ext (𝒰 : OpenCover.{v} X) {Y : Scheme} (f₁ f₂ : X ⟶ Y)
+    (h : ∀ x, 𝒰.map x ≫ f₁ = 𝒰.map x ≫ f₂) : f₁ = f₂
+\end{lstlisting}
+
+\textbf{Natural Language:} Two morphisms $f_1, f_2: X \to Y$ are equal if they agree when restricted to each element of an open cover. This is a fundamental "local-to-global" principle.
+
+\section{Locally Directed Gluing}
+
+\subsection{Locally Directed Diagrams}
+
+\begin{lstlisting}
+variable {J : Type w} [Category.{v} J] (F : J ⥤ Scheme.{u})
+variable [∀ {i j} (f : i ⟶ j), IsOpenImmersion (F.map f)]
+variable [(F ⋙ forget).IsLocallyDirected]
+\end{lstlisting}
+
+\textbf{Natural Language:} A diagram $F: J \to \mathbf{Scheme}$ is locally directed if:
+\begin{itemize}
+\item All morphisms in the diagram are open immersions
+\item For any schemes $F(i)$, $F(j)$ and points $x \in F(i)$, $y \in F(j)$ that map to the same point in the colimit, there exists $F(k)$ containing both points
+\end{itemize}
+
+\subsection{Intersection Construction}
+
+\begin{lstlisting}
+def V (i j : J) : (F.obj i).Opens := ⨆ (k : Σ k, (k ⟶ i) × (k ⟶ j)), (F.map k.2.1).opensRange
+\end{lstlisting}
+
+\textbf{Natural Language:} The "intersection" $V_{ij}$ is defined as the union of all schemes $F(k)$ that map to both $F(i)$ and $F(j)$. This captures the overlapping regions in a directed system.
+
+\subsection{Glue Data Construction}
+
+\begin{lstlisting}
+def glueData : Scheme.GlueData where
+  J := Shrink.{u} J
+  U j := F.obj ↓j
+  V ij := V F ↓ij.1 ↓ij.2
+  f i j := Scheme.Opens.ι _
+  t i j := t F ↓i ↓j
+  ...
+\end{lstlisting}
+
+\textbf{Natural Language:} For a locally directed diagram, we can automatically construct glue data using the intersection construction. The transition maps are induced by the local directedness property.
+
+\subsection{Colimit Construction}
+
+\begin{lstlisting}
+def cocone : Cocone F where
+  pt := (glueData F).glued
+  ι.app j := F.map (eqToHom (by simp)) ≫ (glueData F).ι (equivShrink _ j)
+
+def isColimit : IsColimit (cocone F)
+\end{lstlisting}
+
+\textbf{Natural Language:} The glued scheme serves as the colimit of the locally directed diagram, with the natural morphisms from each component scheme.
+
+\section{Applications and Importance}
+
+\subsection{General Gluing Applications}
+
+The general gluing theory enables:
+\begin{itemize}
+\item Construction of schemes from local affine pieces
+\item Proof that many constructions preserve the scheme property
+\item Development of descent theory and faithfully flat covers
+\item Construction of moduli spaces and parameter spaces
+\end{itemize}
+
+\subsection{Locally Directed Applications}
+
+The locally directed gluing is particularly useful for:
+\begin{itemize}
+\item Union of schemes indexed by directed sets
+\item Direct limits in the category of schemes
+\item Constructions involving increasing sequences of open sets
+\item Algebraic closures and separable closures of schemes
+\end{itemize}
+
+\subsection{Connection to Classical Algebraic Geometry}
+
+This gluing theory formalizes several classical constructions:
+\begin{itemize}
+\item Patching together affine charts to build projective varieties
+\item Constructing schemes from sheaves of rings
+\item Building global sections from compatible local sections
+\item Descent for morphisms and other properties
+\end{itemize}
+
+\section{Technical Implementation}
+
+\subsection{Multicoequalizer Construction}
+
+The gluing is implemented using multicoequalizers in the category of schemes:
+\begin{itemize}
+\item The coequalizer identifies points that should be the same
+\item Open immersions ensure the gluing preserves the scheme structure
+\item Compatibility conditions ensure well-definedness
+\end{itemize}
+
+\subsection{Hierarchy of Constructions}
+
+The construction builds through several levels:
+\begin{enumerate}
+\item Topological gluing of underlying spaces
+\item Presheafed space gluing with compatible structure sheaves
+\item Sheafed space gluing with sheaf conditions
+\item Locally ringed space gluing with local ring conditions
+\item Scheme gluing with additional scheme-theoretic properties
+\end{enumerate}
+
+\section{Conclusion}
+
+The gluing theory in \texttt{Gluing.lean} provides:
+
+\subsection{Fundamental Constructions}
+\begin{itemize}
+\item General framework for gluing schemes from local pieces
+\item Specialized efficient methods for directed diagrams
+\item Tools for extending local morphisms to global ones
+\item Characterizations of topological and algebraic properties
+\end{itemize}
+
+\subsection{Theoretical Foundations}
+\begin{itemize}
+\item Rigorous treatment of the local-to-global principle
+\item Proof that schemes can be reconstructed from their open covers
+\item Foundation for descent theory and faithfully flat morphisms
+\item Connection between categorical limits and geometric constructions
+\end{itemize}
+
+\subsection{Practical Tools}
+\begin{itemize}
+\item Concrete algorithms for checking gluing conditions
+\item Methods for extending local constructions globally
+\item Tools for working with covers and intersection conditions
+\item Efficient handling of directed systems and unions
+\end{itemize}
+
+This gluing theory is essential for algebraic geometry, providing both the theoretical framework and practical tools needed to construct and study schemes systematically.
+
+\end{document}

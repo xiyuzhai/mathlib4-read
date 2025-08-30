@@ -1,0 +1,447 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom, LocallyRingedSpace,
+    TopCat, SheafedSpace, PresheafedSpace, PrimeSpectrum, StructureSheaf, Localization,
+    IsLocalRing, Subring, LocalPredicate, PrelocalPredicate, Adjunction, MorphismProperty,
+    IsOpenEmbedding, WalkingCospan},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp, rcases, grind,
+    have, change, erw, use},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+  breakindent=25pt,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+           {⊓}{{$\sqcap$}}1
+           {⊣}{{$\dashv$}}1
+           {''ᵁ}{{$f_{*}U$}}3
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Open Immersions of Schemes in Mathlib4\\
+\large A Companion to \texttt{OpenImmersion.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{OpenImmersion.lean} file in Mathlib4. The file develops the theory of open immersions of schemes, which are fundamental morphisms that allow us to view open subschemes as schemes in their own right while maintaining the relationship with their ambient scheme.
+
+Open immersions are the scheme-theoretic generalization of open embeddings of topological spaces. They play a crucial role in gluing constructions, descent theory, and the study of non-affine schemes built from affine pieces.
+
+\section{Basic Definition}
+
+\subsection{Open Immersion as Morphism Property}
+
+\begin{lstlisting}
+abbrev IsOpenImmersion : MorphismProperty (Scheme.{u}) :=
+  fun _ _ f ↦ LocallyRingedSpace.IsOpenImmersion f.toLRSHom
+\end{lstlisting}
+
+\textbf{Natural Language:} A morphism of schemes $f: X \to Y$ is an open immersion if it is an open immersion when viewed as a morphism of locally ringed spaces. This means the underlying continuous map is an open embedding and the induced maps on sheaves are isomorphisms on the image.
+
+\subsection{Composition Property}
+
+\begin{lstlisting}
+instance IsOpenImmersion.comp {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
+    [IsOpenImmersion f] [IsOpenImmersion g] : IsOpenImmersion (f ≫ g)
+\end{lstlisting}
+
+\textbf{Natural Language:} The composition of two open immersions is an open immersion. This is a fundamental property that makes open immersions well-behaved under composition.
+
+\section{Topological Properties}
+
+\subsection{Open Range}
+
+\begin{lstlisting}
+theorem IsOpenImmersion.isOpen_range {X Y : Scheme.{u}} (f : X ⟶ Y) [H : IsOpenImmersion f] :
+    IsOpen (Set.range f.base)
+
+theorem isOpenEmbedding : IsOpenEmbedding f.base :=
+  H.isOpenEmbedding
+\end{lstlisting}
+
+\textbf{Natural Language:} An open immersion $f: X \to Y$ has an open image in $Y$, and the underlying map $f: X \to Y$ is an open embedding of topological spaces. This captures the "open" part of "open immersion."
+
+\subsection{Opens Range}
+
+\begin{lstlisting}
+def opensRange : Y.Opens :=
+  Y.toTopCat.openNhdsOfBase (Set.range f.base) (IsOpenImmersion.isOpen_range f)
+\end{lstlisting}
+
+\textbf{Natural Language:} For an open immersion $f: X \to Y$, we can consider its range as an open subset of $Y$. This gives us a canonical open set that captures the "image" of $X$ inside $Y$.
+
+\section{Functoriality on Opens}
+
+\subsection{Image Functor}
+
+\begin{lstlisting}
+abbrev opensFunctor : X.Opens ⥤ Y.Opens :=
+  Opens.map f.base
+
+lemma image_le_image_of_le {U V : X.Opens} (e : U ≤ V) : f ''ᵁ U ≤ f ''ᵁ V := by
+  exact Opens.map_mono f.base e
+\end{lstlisting}
+
+\textbf{Natural Language:} An open immersion induces a functor from opens of $X$ to opens of $Y$ by taking images. This functor is monotonic: larger open sets have larger images.
+
+\subsection{Image Properties}
+
+\begin{lstlisting}
+lemma image_top_eq_opensRange : f ''ᵁ ⊤ = f.opensRange := by
+  ext; exact Set.image_univ.symm
+
+lemma preimage_image_eq (U : X.Opens) : f ⁻¹ᵁ f ''ᵁ U = U := by
+  ext x; exact ⟨fun ⟨y, hy, e⟩ => e ▸ hy, fun h => ⟨x, h, rfl⟩⟩
+\end{lstlisting}
+
+\textbf{Natural Language:} The image of the entire space $X$ equals the range of $f$. More importantly, taking the preimage of an image gives back the original open set, reflecting the embedding nature of open immersions.
+
+\subsection{Injectivity}
+
+\begin{lstlisting}
+lemma image_injective : Function.Injective (f ''ᵁ ·) := by
+  intro U V h
+  rw [← preimage_image_eq f U, h, preimage_image_eq f V]
+\end{lstlisting}
+
+\textbf{Natural Language:} The image functor is injective: different open sets in $X$ have different images in $Y$. This is a key property that allows us to recover information about $X$ from its image in $Y$.
+
+\section{Sheaf Isomorphisms}
+
+\subsection{App Isomorphism on Range}
+
+\begin{lstlisting}
+lemma isIso_app (V : Y.Opens) (hV : V ≤ f.opensRange) : IsIso (f.app V) := by
+  rw [isIso_iff_bijective]
+  exact LocallyRingedSpace.IsOpenImmersion.app_bijective f.toLRSHom V hV
+\end{lstlisting}
+
+\textbf{Natural Language:} For open sets $V \subseteq Y$ that are contained in the range of $f$, the induced map on sections $\Gamma(Y, V) \to \Gamma(X, f^{-1}V)$ is an isomorphism. This captures the "immersion" part of "open immersion."
+
+\subsection{Canonical App Isomorphism}
+
+\begin{lstlisting}
+def appIso (U) : Γ(Y, f ''ᵁ U) ≅ Γ(X, U) :=
+  { hom := f.app (f ''ᵁ U) ≫ X.presheaf.map (eqToHom (preimage_image_eq f U)).op
+    inv := X.presheaf.map (eqToHom (preimage_image_eq f U).symm).op ≫ (inv (f.app (f ''ᵁ U)))
+    -- isomorphism properties }
+\end{lstlisting}
+
+\textbf{Natural Language:} For any open $U \subseteq X$, the sections over its image $f(U) \subseteq Y$ are canonically isomorphic to the sections over $U$. This is the fundamental isomorphism that makes open immersions behave like embeddings at the sheaf level.
+
+\subsection{Naturality}
+
+\begin{lstlisting}
+theorem appIso_inv_naturality {U V : X.Opens} (i : op U ⟶ op V) :
+    (f.appIso V).inv ≫ X.presheaf.map i = 
+    Y.presheaf.map (f.opensFunctor.map i.unop).op ≫ (f.appIso U).inv
+\end{lstlisting}
+
+\textbf{Natural Language:} The app isomorphisms are natural with respect to restriction maps. This ensures that the isomorphisms are compatible with the sheaf structure.
+
+\section{Opens Equivalence}
+
+\subsection{Equivalence of Opens}
+
+\begin{lstlisting}
+def IsOpenImmersion.opensEquiv {X Y : Scheme.{u}} (f : X ⟶ Y) [IsOpenImmersion f] :
+    X.Opens ≃ f.opensRange.Opens :=
+  { toFun := fun U => ⟨(f ''ᵁ U).1, image_le_opensRange f U⟩
+    invFun := fun U => f ⁻¹ᵁ U.1
+    left_inv := preimage_image_eq f
+    right_inv := fun U => Subtype.ext (image_preimage_eq_opensRange_inter f U.1) }
+\end{lstlisting}
+
+\textbf{Natural Language:} An open immersion $f: X \to Y$ induces an equivalence between the opens of $X$ and the opens of the range of $f$ (viewed as an open subset of $Y$). This shows that $X$ is essentially the same as its image, just viewed in different contexts.
+
+\section{Examples of Open Immersions}
+
+\subsection{Basic Opens in Spec}
+
+\begin{lstlisting}
+instance basic_open_isOpenImmersion {R : CommRingCat.{u}} (f : R) :
+    IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap R (Localization.Away f))))
+
+instance {R} [CommRing R] (f : R) :
+    IsOpenImmersion (Spec.map (algebraMap R R[f⁻¹]))
+\end{lstlisting}
+
+\textbf{Natural Language:} The canonical map from $\mathrm{Spec}(R[f^{-1}])$ to $\mathrm{Spec}(R)$ (corresponding to the localization $R \to R[f^{-1}]$) is an open immersion. This gives us the basic opens in affine schemes as open subschemes.
+
+\subsection{Localization Criterion}
+
+\begin{lstlisting}
+lemma _root_.AlgebraicGeometry.IsOpenImmersion.of_isLocalization {R S} [CommRing R] [CommRing S]
+    [Algebra R S] [IsLocalization (Algebra.algebraMapSubmonoid R T) S] :
+    IsOpenImmersion (Spec.map (algebraMap R S).op)
+\end{lstlisting}
+
+\textbf{Natural Language:} More generally, if $S$ is a localization of $R$ at some multiplicative set, then $\mathrm{Spec}(S) \to \mathrm{Spec}(R)$ is an open immersion. This provides a large class of examples and connects open immersions to classical algebraic concepts.
+
+\section{Characterization via Affine Covers}
+
+\subsection{Local Characterization}
+
+\begin{lstlisting}
+theorem exists_affine_mem_range_and_range_subset
+    {f : X ⟶ Y} [IsOpenImmersion f] (x : Y) (hx : x ∈ Set.range f.base) :
+    ∃ (U : Y.affineOpens), x ∈ U ∧ Set.range f.base ⊆ U
+\end{lstlisting}
+
+\textbf{Natural Language:} For an open immersion, every point in the range has an affine open neighborhood that contains the entire range. This provides a way to understand open immersions in terms of affine pieces.
+
+\section{Construction of Schemes from Open Immersions}
+
+\subsection{Scheme Construction}
+
+\begin{lstlisting}
+def toScheme : Scheme := by
+  apply LocallyRingedSpace.IsOpenImmersion.scheme Y.toLocallyRingedSpace
+  intro x
+  obtain ⟨U, hxU, iU⟩ := exists_affine_mem_range_and_range_subset f x (Set.mem_range_of_surjective h x)
+  exact ⟨U.1, iU, ⟨U.2⟩⟩
+\end{lstlisting}
+
+\textbf{Natural Language:} Given a locally ringed space $Y$ and a surjective open immersion from affine schemes covering $Y$, we can construct a scheme structure on $Y$. This is a fundamental construction principle for schemes.
+
+\subsection{Universal Property}
+
+\begin{lstlisting}
+def toSchemeHom : toScheme Y f ⟶ Y :=
+  ⟨LocallyRingedSpace.IsOpenImmersion.toSchemeHom Y f⟩
+
+instance toSchemeHom_isOpenImmersion : AlgebraicGeometry.IsOpenImmersion (toSchemeHom Y f)
+\end{lstlisting}
+
+\textbf{Natural Language:} The constructed scheme comes with a canonical open immersion into the original locally ringed space, and this morphism is indeed an open immersion of schemes.
+
+\section{Pullbacks and Fiber Products}
+
+\subsection{Pullback Properties}
+
+\begin{lstlisting}
+instance pullback_snd_of_left : IsOpenImmersion (pullback.snd f g) := by
+  have := PullbackCone.isColimit_of_left IsOpenImmersion.isColimitOfLeft
+  apply PresheafedSpace.IsOpenImmersion.of_isColimit this
+  apply SheafedSpace.IsOpenImmersion.of_isColimit this
+
+instance pullback_fst_of_right : IsOpenImmersion (pullback.fst g f) := by
+  rw [← pullbackSymmetry_hom_comp_snd]
+  infer_instance
+\end{lstlisting}
+
+\textbf{Natural Language:} In a pullback diagram where one of the morphisms is an open immersion, the projection to the side opposite the open immersion is also an open immersion. This is a fundamental property of pullbacks of open immersions.
+
+\subsection{Range of Pullbacks}
+
+\begin{lstlisting}
+theorem range_pullback_snd_of_left :
+    Set.range (pullback.snd f g).base = (g ⁻¹ᵁ f.opensRange).1
+
+theorem opensRange_pullback_snd_of_left :
+    (pullback.snd f g).opensRange = g ⁻¹ᵁ f.opensRange
+\end{lstlisting}
+
+\textbf{Natural Language:} The range of the pullback morphism is exactly the preimage of the range of the original open immersion. This gives us a concrete description of pullbacks in terms of open sets.
+
+\section{Base Change Properties}
+
+\subsection{Stability Under Base Change}
+
+\begin{lstlisting}
+instance pullback_to_base [IsOpenImmersion g] :
+    IsOpenImmersion (limit.π (cospan f g) WalkingCospan.one) := by
+  rw [← limit.w (cospan f g) WalkingCospan.Hom.inl]
+  infer_instance
+\end{lstlisting}
+
+\textbf{Natural Language:} Open immersions are stable under base change: if $f: X \to Z$ is any morphism and $g: Y \to Z$ is an open immersion, then the pullback $X \times_Z Y \to X$ is also an open immersion.
+
+\subsection{Base Change Formulas}
+
+\begin{lstlisting}
+theorem range_pullback_to_base_of_left :
+    Set.range (pullback.fst f g ≫ f).base =
+    Set.range f.base ∩ Set.range g.base
+
+theorem range_pullback_to_base_of_right :
+    Set.range (pullback.fst g f ≫ g).base =
+    Set.range f.base ∩ Set.range g.base
+\end{lstlisting}
+
+\textbf{Natural Language:} The range of the composition from a pullback to the base is the intersection of the ranges of the original morphisms. This provides explicit formulas for understanding pullbacks geometrically.
+
+\section{Applications and Examples}
+
+\subsection{Open Subschemes}
+
+Open immersions provide the correct notion of "open subscheme": given a scheme $Y$ and an open subset $U \subseteq Y$, there exists a scheme structure on $U$ and an open immersion $U \hookrightarrow Y$ that makes $U$ an "open subscheme" of $Y$.
+
+\subsection{Gluing Constructions}
+
+Open immersions are fundamental to gluing constructions in algebraic geometry:
+\begin{itemize}
+\item Cover a space with affine open pieces
+\item Each piece is an open immersion into the total space
+\item Gluing data consists of isomorphisms on overlaps
+\item The result is a scheme built from affine pieces
+\end{itemize}
+
+\subsection{Descent Theory}
+
+The stability of open immersions under base change makes them important in descent theory and the study of morphisms of schemes.
+
+\section{Technical Lemmas}
+
+\subsection{Compatibility with Sections}
+
+\begin{lstlisting}
+lemma appLE_appIso_inv {X Y : Scheme.{u}} (f : X ⟶ Y) [IsOpenImmersion f] {U : Y.Opens}
+    {V : X.Opens} (e : V ≤ f ⁻¹ᵁ U) :
+    f.appLE U V e = (f.appIso V).inv ≫ 
+    Y.presheaf.map (homOfLE (show f ''ᵁ V ≤ U from image_le_image_of_le f e)).op
+\end{lstlisting}
+
+\textbf{Natural Language:} Technical compatibility results showing how the various section maps interact with the canonical isomorphisms. These are essential for proving functoriality and naturality properties.
+
+\section{Conclusion}
+
+Open immersions provide a robust framework for understanding open subschemes and embeddings in algebraic geometry. Key insights include:
+
+\begin{enumerate}
+\item \textbf{Local nature}: Open immersions can be checked locally and are stable under composition
+\item \textbf{Sheaf isomorphisms}: They induce isomorphisms on sections over their range
+\item \textbf{Equivalence of opens}: They create equivalences between open set lattices  
+\item \textbf{Base change stability}: They behave well under pullbacks and fiber products
+\item \textbf{Construction principle}: They provide ways to construct schemes from locally ringed spaces
+\end{enumerate}
+
+Open immersions are fundamental to:
+\begin{itemize}
+\item Defining open subschemes
+\item Gluing constructions for non-affine schemes
+\item Descent theory and étale topology
+\item Understanding the relationship between schemes and their affine pieces
+\end{itemize}
+
+The theory developed in this file provides the foundation for more advanced constructions in algebraic geometry, particularly those involving non-affine schemes and gluing techniques.
+
+\end{document}

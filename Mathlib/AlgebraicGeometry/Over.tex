@@ -1,0 +1,397 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom,
+    OverClass, CanonicallyOverClass, HomIsOver, Over},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+           {↘}{{$\searrow$}}1
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Typeclasses for $S$-schemes and $S$-morphisms in Mathlib4\\
+\large A Companion to \texttt{Over.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{Over.lean} file in Mathlib4. The file defines typeclasses for working with schemes and morphisms "over" a base scheme $S$. This is fundamental in relative algebraic geometry, where we study families of schemes parametrized by a base scheme and morphisms that are compatible with this parametrization.
+
+\section{The Over Structure}
+
+\subsection{Base Scheme Structure}
+
+\begin{lstlisting}
+protected abbrev Over (X S : Scheme.{u}) := OverClass X S
+\end{lstlisting}
+
+\textbf{Natural Language:} The typeclass \texttt{X.Over S} provides the data of a structure morphism $X \searrow S : X \to S$, making $X$ an $S$-scheme. This captures the fundamental concept of relative algebraic geometry where schemes are studied in relation to a fixed base scheme.
+
+In classical algebraic geometry, this corresponds to:
+\begin{itemize}
+\item Varieties over a field $k$ (where $S = \mathrm{Spec}(k)$)
+\item Schemes over $\mathbb{Z}$ (arithmetic geometry)
+\item Families of schemes parametrized by a base scheme
+\item Relative constructions like relative Spec and relative Proj
+\end{itemize}
+
+\subsection{Canonical Over Structure}
+
+\begin{lstlisting}
+abbrev CanonicallyOver (X S : Scheme.{u}) := CanonicallyOverClass X S
+\end{lstlisting}
+
+\textbf{Natural Language:} The typeclass \texttt{X.CanonicallyOver S} indicates that $X$ has a canonical structure as an $S$-scheme, where the base scheme $S$ can be uniquely inferred from the structure of $X$. This is used when there is a "natural" or "canonical" choice of base scheme.
+
+Examples include:
+\begin{itemize}
+\item Open subschemes of $X$ are canonically over $X$
+\item Fiber products $X \times_S Y$ are canonically over $S$
+\item Scheme-theoretic fibers are canonically over the base point
+\end{itemize}
+
+\section{Morphisms Over a Base}
+
+\subsection{Over Morphism Typeclass}
+
+\begin{lstlisting}
+abbrev Hom.IsOver (f : X.Hom Y) (S : Scheme.{u}) [X.Over S] [Y.Over S] := HomIsOver f S
+\end{lstlisting}
+
+\textbf{Natural Language:} Given schemes $X$ and $Y$ that are both over $S$, a morphism $f: X \to Y$ has type \texttt{f.IsOver S} if it commutes with the structure morphisms to $S$. This means the following diagram commutes:
+\[
+\begin{tikzcd}
+X \arrow[r, "f"] \arrow[dr, "X \searrow S"'] & Y \arrow[d, "Y \searrow S"] \\
+& S
+\end{tikzcd}
+\]
+
+\subsection{Characterization of Over Morphisms}
+
+\begin{lstlisting}
+@[simp]
+lemma Hom.isOver_iff [X.Over S] [Y.Over S] {f : X ⟶ Y} : f.IsOver S ↔ f ≫ Y ↘ S = X ↘ S
+\end{lstlisting}
+
+\textbf{Natural Language:} A morphism $f: X \to Y$ is an $S$-morphism if and only if composing $f$ with the structure morphism $Y \to S$ gives the same result as the structure morphism $X \to S$.
+
+This is the fundamental compatibility condition that makes $f$ a morphism of $S$-schemes rather than just a morphism of schemes.
+
+\section{Bundled Objects and Morphisms}
+
+\subsection{Bundled Over Objects}
+
+\begin{lstlisting}
+abbrev asOver (X S : Scheme.{u}) [X.Over S] := OverClass.asOver X S
+\end{lstlisting}
+
+\textbf{Natural Language:} Given an $S$-scheme $X$, we can form the bundled object \texttt{X.asOver S} which packages both the scheme $X$ and its structure morphism to $S$ into a single object in the category of schemes over $S$.
+
+\subsection{Bundled Over Morphisms}
+
+\begin{lstlisting}
+abbrev Hom.asOver (f : X.Hom Y) (S : Scheme.{u}) [X.Over S] [Y.Over S] [f.IsOver S] :=
+  OverClass.asOverHom S f
+\end{lstlisting}
+
+\textbf{Natural Language:} Given an $S$-morphism $f: X \to Y$, we can form the bundled morphism \texttt{f.asOver S} in the category of schemes over $S$.
+
+\section{Categorical Structure}
+
+\subsection{The Over Category}
+
+The bundled objects and morphisms naturally organize into the **over category** $\mathbf{Scheme}/S$:
+\begin{itemize}
+\item \textbf{Objects}: Schemes $X$ equipped with morphisms $X \to S$
+\item \textbf{Morphisms}: Morphisms $f: X \to Y$ that make the triangle commute
+\item \textbf{Composition}: Ordinary composition of scheme morphisms
+\item \textbf{Identity}: Identity morphisms (which automatically commute with structure morphisms)
+\end{itemize}
+
+\subsection{Functorial Properties}
+
+Over categories satisfy many important properties:
+\begin{itemize}
+\item They have pullbacks (fibered products over $S$)
+\item They have terminal objects ($S$ itself)
+\item They inherit many limits and colimits from the base category
+\item Base change functors between over categories are well-behaved
+\end{itemize}
+
+\section{Examples and Applications}
+
+\subsection{Varieties over a Field}
+
+When $S = \mathrm{Spec}(k)$ for a field $k$:
+\begin{itemize}
+\item $X.Over\, S$ means $X$ is a $k$-variety
+\item Morphisms over $S$ are $k$-morphisms
+\item This is the classical setting of algebraic geometry over fields
+\end{itemize}
+
+\subsection{Arithmetic Geometry}
+
+When $S = \mathrm{Spec}(\mathbb{Z})$:
+\begin{itemize}
+\item $X.Over\, S$ means $X$ is defined over the integers
+\item This is the setting for studying arithmetic properties of schemes
+\item Base change to $\mathrm{Spec}(\mathbb{F}_p)$ gives reduction modulo $p$
+\end{itemize}
+
+\subsection{Families of Schemes}
+
+For a general base scheme $S$:
+\begin{itemize}
+\item Objects over $S$ represent families of schemes parametrized by $S$
+\item Points $s \in S$ correspond to fibers of the family
+\item Morphisms over $S$ are morphisms of families that preserve the parametrization
+\end{itemize}
+
+\subsection{Relative Constructions}
+
+Many constructions in algebraic geometry are naturally relative:
+\begin{itemize}
+\item \textbf{Relative Spec}: $\mathrm{Spec}_S(\mathcal{A})$ for a quasi-coherent $\mathcal{O}_S$-algebra $\mathcal{A}$
+\item \textbf{Relative Proj}: $\mathrm{Proj}_S(\mathcal{A})$ for a graded $\mathcal{O}_S$-algebra $\mathcal{A}$
+\item \textbf{Fiber products}: $X \times_S Y$ for schemes $X, Y$ over $S$
+\item \textbf{Base change}: Pulling back families along morphisms $T \to S$
+\end{itemize}
+
+\section{Over Towers and Transitivity}
+
+\subsection{Tower Structure}
+
+The file references the existence of \texttt{CategoryTheory.IsOverTower X Y S}, which handles the situation where we have a tower of base schemes:
+\[
+X \to Y \to S
+\]
+
+This allows for more complex relative situations where schemes are parametrized over intermediate bases.
+
+\subsection{Composition of Over Structures}
+
+If $X$ is over $Y$ and $Y$ is over $S$, then $X$ is naturally over $S$ via composition. The typeclass system can handle this automatically through appropriate instances.
+
+\section{Technical Implementation}
+
+\subsection{Thin Wrapper Design}
+
+The file implements over structures as "thin wrappers" around the more general \texttt{CategoryTheory/Comma/OverClass} framework. This provides:
+\begin{itemize}
+\item Consistency with the general category theory library
+\item Reuse of existing infrastructure for over categories
+\item Specialized terminology and notation for scheme theory
+\item Integration with scheme-specific constructions
+\end{itemize}
+
+\subsection{Typeclass Inference}
+
+The typeclass system allows for automatic inference of over structures:
+\begin{itemize}
+\item When the base scheme is clear from context, it can be inferred
+\item Morphisms automatically inherit over properties when appropriate
+\item Complex over structures can be built compositionally
+\end{itemize}
+
+\section{Relationship to Classical Theory}
+
+\subsection{Grothendieck's Relative Point of View}
+
+This formalization embodies Grothendieck's revolutionary insight that many constructions in algebraic geometry are best understood in a relative setting:
+\begin{itemize}
+\item Properties of schemes are often relative to a base
+\item Families of schemes are fundamental objects of study
+\item Base change and specialization provide powerful tools
+\item Descent theory works in the relative setting
+\end{itemize}
+
+\subsection{Moduli Theory}
+
+Over structures are essential for moduli theory:
+\begin{itemize}
+\item Moduli spaces parametrize families of geometric objects
+\item Universal properties are naturally expressed in over categories
+\item Deformation theory studies families over infinitesimal bases
+\item Algebraic stacks generalize the notion of moduli spaces
+\end{itemize}
+
+\section{Integration with Other Mathlib Components}
+
+\subsection{Pullbacks and Base Change}
+
+The over structure integrates naturally with:
+\begin{itemize}
+\item Pullback constructions (fibered products)
+\item Base change functors
+\item Flat morphisms and faithfully flat descent
+\item Proper and smooth morphisms
+\end{itemize}
+
+\subsection{Cohomology and Descent}
+
+Over structures provide the foundation for:
+\begin{itemize}
+\item Sheaf cohomology in the relative setting
+\item Descent theory for morphisms and objects
+\item Faithfully flat topology and étale cohomology
+\item Higher category theory and derived categories
+\end{itemize}
+
+\section{Conclusion}
+
+The \texttt{Over.lean} file provides:
+
+\subsection{Foundational Infrastructure}
+\begin{itemize}
+\item Clean typeclass-based interface for relative algebraic geometry
+\item Integration with general category theory frameworks
+\item Automatic inference and composition of over structures
+\item Bundling facilities for working with over categories
+\end{itemize}
+
+\subsection{Conceptual Framework}
+\begin{itemize}
+\item Formalization of Grothendieck's relative point of view
+\item Foundation for families and moduli theory
+\item Support for base change and specialization
+\item Framework for relative constructions
+\end{itemize}
+
+\subsection{Technical Benefits}
+\begin{itemize}
+\item Type safety for ensuring morphisms respect base structures
+\item Automatic propagation of over properties
+\item Clean notation and terminology for scheme theory
+\item Extensibility for more complex relative situations
+\end{itemize}
+
+\subsection{Mathematical Applications}
+\begin{itemize}
+\item Essential for studying families of algebraic varieties
+\item Foundation for arithmetic geometry and number theory
+\item Key component for moduli spaces and parameter spaces
+\item Support for advanced topics like stacks and derived geometry
+\end{itemize}
+
+This typeclass-based approach to relative algebraic geometry provides both conceptual clarity and practical tools for working with schemes in relation to base schemes. It embodies modern perspectives on algebraic geometry while providing concrete computational tools for mathematical reasoning and proof development.
+
+\end{document>

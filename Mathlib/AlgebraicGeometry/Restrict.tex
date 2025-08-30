@@ -1,0 +1,483 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom,
+    pullback, PullbackCone, OpenCover, isOpenEmbedding, homOfLE},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+           {∣}{{$\mid$}}1
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Restriction of Schemes and Morphisms in Mathlib4\\
+\large A Companion to \texttt{Restrict.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{Restrict.lean} file in Mathlib4. The file develops the theory of restricting schemes to open subsets and restricting morphisms accordingly. This is fundamental to the local nature of algebraic geometry, where properties are often studied by restricting to smaller open sets.
+
+\section{Open Subsets as Schemes}
+
+\subsection{Coercion to Schemes}
+
+\begin{lstlisting}
+@[coe]
+def toScheme {X : Scheme.{u}} (U : X.Opens) : Scheme.{u} :=
+  X.restrict U.isOpenEmbedding
+
+instance : CoeOut X.Opens Scheme := ⟨toScheme⟩
+\end{lstlisting}
+
+\textbf{Natural Language:} Every open subset $U$ of a scheme $X$ can be viewed as a scheme in its own right through the restriction construction. This creates a coercion that allows us to treat opens as schemes directly.
+
+\subsection{The Inclusion Morphism}
+
+\begin{lstlisting}
+def ι : ↑U ⟶ X := X.ofRestrict _
+\end{lstlisting}
+
+\textbf{Natural Language:} For each open subset $U \subseteq X$, there is a canonical inclusion morphism $\iota: U \to X$ that embeds $U$ as an open subscheme of $X$.
+
+\subsection{Open Immersion Property}
+
+\begin{lstlisting}
+instance : IsOpenImmersion U.ι
+\end{lstlisting}
+
+\textbf{Natural Language:} The inclusion morphism $U \to X$ is an open immersion, meaning it identifies $U$ with its image as an open subset and preserves the scheme structure.
+
+\section{Presheaf Properties}
+
+\subsection{Presheaf Objects}
+
+\begin{lstlisting}
+lemma toScheme_presheaf_obj (V) : Γ(U, V) = Γ(X, U.ι ''ᵁ V)
+\end{lstlisting}
+
+\textbf{Natural Language:} Sections over an open set $V$ in the restricted scheme $U$ correspond exactly to sections over the image $U.ι(V)$ in the original scheme $X$.
+
+\subsection{Presheaf Maps}
+
+\begin{lstlisting}
+@[simp]
+lemma toScheme_presheaf_map {V W} (i : V ⟶ W) :
+    U.toScheme.presheaf.map i = X.presheaf.map (U.ι.opensFunctor.map i.unop).op
+\end{lstlisting}
+
+\textbf{Natural Language:} Restriction maps in the presheaf on $U$ are obtained by pushing forward along $\iota$ to get restriction maps in the presheaf on $X$.
+
+\section{Application Maps}
+
+\subsection{Basic Application}
+
+\begin{lstlisting}
+@[simp]
+lemma ι_app (V) : U.ι.app V = X.presheaf.map
+    (homOfLE (x := U.ι ''ᵁ U.ι ⁻¹ᵁ V) (Set.image_preimage_subset _ _)).op
+\end{lstlisting}
+
+\textbf{Natural Language:} The application of $\iota$ to sections is given by the natural restriction map in $X$'s presheaf.
+
+\subsection{Top Application}
+
+\begin{lstlisting}
+@[simp]
+lemma ι_appTop :
+    U.ι.appTop = X.presheaf.map (homOfLE (x := U.ι ''ᵁ ⊤) le_top).op
+\end{lstlisting}
+
+\textbf{Natural Language:} Taking global sections of $U$ corresponds to taking sections of $X$ over the image of $U$.
+
+\section{Range Properties}
+
+\subsection{Opens Range}
+
+\begin{lstlisting}
+@[simp]
+lemma opensRange_ι : U.ι.opensRange = U
+\end{lstlisting}
+
+\textbf{Natural Language:} The image of $\iota$ as an open subset is exactly $U$ itself.
+
+\subsection{Topological Range}
+
+\begin{lstlisting}
+@[simp]
+lemma range_ι : Set.range U.ι.base = U
+\end{lstlisting}
+
+\textbf{Natural Language:} The image of the underlying continuous map is exactly the subset $U \subseteq X$.
+
+\section{Global Sections Isomorphism}
+
+\subsection{Top Isomorphism}
+
+\begin{lstlisting}
+@[simps!]
+def topIso : Γ(U, ⊤) ≅ Γ(X, U) :=
+  X.presheaf.mapIso (eqToIso U.ι_image_top.symm).op
+\end{lstlisting}
+
+\textbf{Natural Language:} The global sections of the restricted scheme $U$ are naturally isomorphic to the sections of $X$ over the open set $U$. This establishes the fundamental relationship between restriction and sections.
+
+\section{Stalks}
+
+\subsection{Stalk Isomorphism}
+
+\begin{lstlisting}
+def stalkIso {X : Scheme.{u}} (U : X.Opens) (x : U) :
+    U.toScheme.presheaf.stalk x ≅ X.presheaf.stalk x.1
+\end{lstlisting}
+
+\textbf{Natural Language:} The stalk of the structure sheaf of $U$ at a point $x$ is naturally isomorphic to the stalk of $X$'s structure sheaf at the same point. This shows that local properties are preserved under restriction.
+
+\subsection{Germ Compatibility}
+
+\begin{lstlisting}
+@[reassoc (attr := simp)]
+lemma germ_stalkIso_hom {X : Scheme.{u}} (U : X.Opens)
+    {V : U.toScheme.Opens} (x : U) (hx : x ∈ V) :
+      U.toScheme.presheaf.germ V x hx ≫ (U.stalkIso x).hom =
+        X.presheaf.germ (U.ι ''ᵁ V) x.1 ⟨x, hx, rfl⟩
+\end{lstlisting}
+
+\textbf{Natural Language:} Germs (local sections) behave compatibly with the stalk isomorphism, ensuring that the restriction preserves all local algebraic structure.
+
+\section{Restriction Functors and Equivalences}
+
+\subsection{Opens Restriction}
+
+\begin{lstlisting}
+@[simps!]
+def opensRestrict :
+    Scheme.Opens U ≃ { V : X.Opens // V ≤ U }
+\end{lstlisting}
+
+\textbf{Natural Language:} Open subsets of the restricted scheme $U$ correspond bijectively to open subsets of $X$ that are contained in $U$.
+
+\subsection{Restrict Functor}
+
+\begin{lstlisting}
+@[simps! obj_left obj_hom map_left]
+def Scheme.restrictFunctor : X.Opens ⥤ Over X where
+  obj U := Over.mk U.ι
+  map {U V} i := Over.homMk (X.homOfLE i.le) (by simp)
+\end{lstlisting}
+
+\textbf{Natural Language:} There is a functor from the category of opens of $X$ to schemes over $X$, sending each open $U$ to the restricted scheme $U \to X$.
+
+\section{Morphisms Between Opens}
+
+\subsection{Inclusion of Smaller Opens}
+
+\begin{lstlisting}
+protected noncomputable
+def Scheme.homOfLE (X : Scheme.{u}) {U V : X.Opens} (e : U ≤ V) : (U : Scheme.{u}) ⟶ V
+\end{lstlisting}
+
+\textbf{Natural Language:} If $U \subseteq V$ are open subsets of $X$, there is a natural morphism from the scheme $U$ to the scheme $V$.
+
+\subsection{Compatibility with Inclusion}
+
+\begin{lstlisting}
+@[reassoc (attr := simp)]
+lemma Scheme.homOfLE_ι (X : Scheme.{u}) {U V : X.Opens} (e : U ≤ V) :
+    X.homOfLE e ≫ V.ι = U.ι
+\end{lstlisting}
+
+\textbf{Natural Language:} The composition $U \to V \to X$ equals the direct inclusion $U \to X$.
+
+\section{Basic Opens and Localizations}
+
+\subsection{Basic Open Mapping}
+
+\begin{lstlisting}
+lemma Scheme.map_basicOpen (r : Γ(U, ⊤)) :
+    U.ι ''ᵁ U.toScheme.basicOpen r = X.basicOpen
+      (X.presheaf.map (eqToHom U.isOpenEmbedding_obj_top.symm).op r)
+\end{lstlisting}
+
+\textbf{Natural Language:} The image under $\iota$ of a basic open $D(r)$ in $U$ equals a basic open in $X$ determined by the corresponding section.
+
+\subsection{Basic Open Isomorphism to Localization}
+
+\begin{lstlisting}
+def basicOpenIsoSpecAway {R : CommRingCat.{u}} (f : R) :
+    Scheme.Opens.toScheme (X := Spec R) (PrimeSpectrum.basicOpen f) ≅ Spec(Localization.Away f)
+\end{lstlisting}
+
+\textbf{Natural Language:} For an affine scheme $\mathrm{Spec}(R)$, the basic open $D(f)$ is isomorphic to $\mathrm{Spec}(R[1/f])$, establishing the connection between geometric opens and ring-theoretic localizations.
+
+\section{Morphism Restriction}
+
+\subsection{Pullback-Restriction Isomorphism}
+
+\begin{lstlisting}
+def pullbackRestrictIsoRestrict {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) :
+    pullback f (U.ι) ≅ f ⁻¹ᵁ U
+\end{lstlisting}
+
+\textbf{Natural Language:} The pullback of a morphism $f: X \to Y$ along the inclusion $U \to Y$ is isomorphic to the restriction of $X$ to the preimage $f^{-1}(U)$.
+
+\subsection{Morphism Restriction Definition}
+
+\begin{lstlisting}
+def morphismRestrict {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) : (f ⁻¹ᵁ U).toScheme ⟶ U :=
+  (pullbackRestrictIsoRestrict f U).inv ≫ pullback.snd _ _
+
+infixl:85 " ∣_ " => morphismRestrict
+\end{lstlisting}
+
+\textbf{Natural Language:} Given a morphism $f: X \to Y$ and an open $U \subseteq Y$, we can restrict $f$ to get a morphism $f|_U: f^{-1}(U) \to U$. This uses the notation $f \mid_U$.
+
+\section{Properties of Morphism Restriction}
+
+\subsection{Compatibility with Inclusions}
+
+\begin{lstlisting}
+@[reassoc (attr := simp)]
+theorem morphismRestrict_ι {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) :
+    (f ∣_ U) ≫ U.ι = (f ⁻¹ᵁ U).ι ≫ f
+\end{lstlisting}
+
+\textbf{Natural Language:} The restricted morphism is compatible with the inclusion maps in the sense that the diagram commutes.
+
+\subsection{Identity Restriction}
+
+\begin{lstlisting}
+@[simp]
+lemma morphismRestrict_id {X : Scheme.{u}} (U : X.Opens) : 𝟙 X ∣_ U = 𝟙 _ := by
+  rw [← cancel_mono U.ι, morphismRestrict_ι, Category.comp_id, Category.id_comp]
+\end{lstlisting}
+
+\textbf{Natural Language:} Restricting the identity morphism gives the identity on the restricted scheme.
+
+\subsection{Composition Property}
+
+\begin{lstlisting}
+theorem morphismRestrict_comp {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (U : Opens Z) :
+    (f ≫ g) ∣_ U = f ∣_ g ⁻¹ᵁ U ≫ g ∣_ U
+\end{lstlisting}
+
+\textbf{Natural Language:} Restricting a composition of morphisms equals the composition of the appropriate restrictions.
+
+\section{Base Change Properties}
+
+\subsection{Continuous Map Base}
+
+\begin{lstlisting}
+theorem morphismRestrict_base {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) :
+    ⇑(f ∣_ U).base = U.1.restrictPreimage f.base
+\end{lstlisting}
+
+\textbf{Natural Language:} The underlying continuous map of the restricted morphism is the restriction of the original continuous map to the appropriate preimage.
+
+\subsection{Pullback Isomorphism}
+
+\begin{lstlisting}
+theorem isPullback_morphismRestrict {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) :
+    IsPullback (f ∣_ U) (f ⁻¹ᵁ U).ι U.ι f
+\end{lstlisting}
+
+\textbf{Natural Language:} The restriction construction gives a genuine pullback square, confirming that it captures the correct universal property.
+
+\section{Stalk Maps and Localization}
+
+\subsection{Stalk Map Compatibility}
+
+\begin{lstlisting}
+def morphismRestrictStalkMap {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) (x) :
+    Arrow.mk ((f ∣_ U).stalkMap x) ≅ Arrow.mk (f.stalkMap x.1)
+\end{lstlisting}
+
+\textbf{Natural Language:} The stalk map of a restricted morphism is naturally isomorphic to the stalk map of the original morphism, showing that local algebraic properties are preserved.
+
+\section{Advanced Restriction Constructions}
+
+\subsection{Double Restriction}
+
+\begin{lstlisting}
+def morphismRestrictRestrict {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) (V : U.toScheme.Opens) :
+    Arrow.mk (f ∣_ U ∣_ V) ≅ Arrow.mk (f ∣_ U.ι ''ᵁ V)
+\end{lstlisting}
+
+\textbf{Natural Language:} Restricting twice is isomorphic to a single restriction to the appropriate open subset.
+
+\subsection{Basic Open Restriction}
+
+\begin{lstlisting}
+def morphismRestrictRestrictBasicOpen {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.Opens) (r : Γ(Y, U)) :
+    Arrow.mk (f ∣_ U ∣_ U.toScheme.basicOpen (Y.presheaf.map (eqToHom U.isOpenEmbedding_obj_top).op r)) ≅
+      Arrow.mk (f ∣_ Y.basicOpen r)
+\end{lstlisting}
+
+\textbf{Natural Language:} Restricting first to an open $U$ and then to a basic open determined by a section on $U$ is isomorphic to restricting directly to the corresponding basic open in $Y$.
+
+\section{Applications to Covers}
+
+\subsection{Open Cover Restriction}
+
+\begin{lstlisting}
+@[simps! J obj map]
+noncomputable
+def Scheme.OpenCover.restrict {X : Scheme.{u}} (𝒰 : X.OpenCover) (U : Opens X) :
+    U.toScheme.OpenCover
+\end{lstlisting}
+
+\textbf{Natural Language:} Given an open cover of $X$, we can restrict it to get an open cover of any open subset $U \subseteq X$.
+
+\section{Conclusion}
+
+The restriction theory developed in \texttt{Restrict.lean} provides:
+
+\subsection{Foundational Results}
+\begin{itemize}
+\item Every open subset naturally carries a scheme structure
+\item Inclusion morphisms are open immersions
+\item Local properties (stalks, germs) are preserved under restriction
+\end{itemize}
+
+\subsection{Functorial Properties}
+\begin{itemize}
+\item Restriction gives functors between appropriate categories
+\item Global sections of restricted schemes relate naturally to sections on opens
+\item Morphisms can be restricted in a way that preserves composition and identities
+\end{itemize}
+
+\subsection{Connections to Commutative Algebra}
+\begin{itemize}
+\item Basic opens in affine schemes correspond to localizations
+\item Stalks of restricted schemes are unchanged
+\item Restriction preserves the local ring structure
+\end{itemize}
+
+\subsection{Geometric Applications}
+\begin{itemize}
+\item Provides the foundation for studying local properties of schemes
+\item Enables the use of open covers to reduce global problems to local ones
+\item Essential for constructions like gluing and descent theory
+\end{itemize}
+
+This restriction theory is fundamental to algebraic geometry, enabling the systematic study of local properties and the construction of schemes via gluing local pieces.
+
+\end{document}

@@ -1,0 +1,390 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom, LocallyRingedSpace,
+    TopCat, CoeSort, Preorder, MorphismProperty},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+           {⤳}{{$\leadsto$}}1
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Schemes in Mathlib4\\
+\large A Companion to \texttt{Scheme.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{Scheme.lean} file in Mathlib4. The file defines the fundamental concept of schemes in algebraic geometry, establishing schemes as locally ringed spaces that are locally isomorphic to affine schemes (spectra of commutative rings).
+
+A scheme is the central object of study in modern algebraic geometry, generalizing both algebraic varieties and the spectrum of a ring. The definition captures the idea that a scheme should "look like" the spectrum of a commutative ring when examined locally.
+
+\section{Main Definitions}
+
+\subsection{The Structure of a Scheme}
+
+\begin{lstlisting}
+structure Scheme extends LocallyRingedSpace where
+  local_affine :
+    ∀ x : toLocallyRingedSpace,
+      ∃ (U : OpenNhds x) (R : CommRingCat),
+        Nonempty
+          (toLocallyRingedSpace.restrict U.isOpenEmbedding ≅
+           Spec.toLocallyRingedSpace.obj (op R))
+\end{lstlisting}
+
+\textbf{Natural Language:} A scheme is a locally ringed space with the additional property that every point has an open neighborhood that, when restricted to that neighborhood, is isomorphic (as a locally ringed space) to the spectrum of some commutative ring. This captures the fundamental idea that schemes are "locally affine."
+
+\subsection{Morphisms of Schemes}
+
+\begin{lstlisting}
+structure Hom (X Y : Scheme)
+  extends toLRSHom' : X.toLocallyRingedSpace.Hom Y.toLocallyRingedSpace where
+\end{lstlisting}
+
+\textbf{Natural Language:} A morphism between schemes is simply a morphism between their underlying locally ringed spaces. This makes the category of schemes a full subcategory of locally ringed spaces.
+
+\subsection{The Category Structure}
+
+\begin{lstlisting}
+instance : Category Scheme where
+  Hom := Hom
+  id X := Hom.mk (𝟙 X.toLocallyRingedSpace)
+  comp f g := Hom.mk (f.toLRSHom ≫ g.toLRSHom)
+\end{lstlisting}
+
+\textbf{Natural Language:} Schemes form a category where morphisms are as defined above, identity morphisms are induced from the identity morphisms of locally ringed spaces, and composition is induced from composition of locally ringed space morphisms.
+
+\section{Notation and Conventions}
+
+\subsection{Preimage Notation}
+
+\begin{lstlisting}
+scoped[AlgebraicGeometry] notation3:90 f:91 " ⁻¹ᵁ " U:90 =>
+  @Functor.obj (Scheme.Opens _) _ (Scheme.Opens _) _
+    (Opens.map (f : Scheme.Hom _ _).base) U
+\end{lstlisting}
+
+\textbf{Natural Language:} The notation $f^{-1}U$ denotes the preimage of an open set $U$ under a morphism $f$ of schemes. This is the pullback of the open set along the underlying continuous map.
+
+\subsection{Global Sections Notation}
+
+\begin{lstlisting}
+scoped[AlgebraicGeometry] notation3 "Γ(" X ", " U ")" =>
+  (PresheafedSpace.presheaf (SheafedSpace.toPresheafedSpace
+    (LocallyRingedSpace.toSheafedSpace (Scheme.toLocallyRingedSpace X)))).obj
+    (op (α := Scheme.Opens _) U)
+\end{lstlisting}
+
+\textbf{Natural Language:} The notation $\Gamma(X, U)$ denotes the sections of the structure sheaf of scheme $X$ over the open set $U$. This gives us the "functions" (more precisely, ring elements) defined on the open set $U$.
+
+\section{Basic Properties}
+
+\subsection{Continuity of Morphisms}
+
+\begin{lstlisting}
+lemma Hom.continuous {X Y : Scheme} (f : X.Hom Y) : Continuous f.base
+\end{lstlisting}
+
+\textbf{Natural Language:} The underlying map of any morphism of schemes is continuous. This is inherited from the fact that morphisms of locally ringed spaces have continuous underlying maps.
+
+\subsection{Specialization Preorder}
+
+\begin{lstlisting}
+instance {X : Scheme.{u}} : Preorder X := specializationPreorder X
+
+lemma le_iff_specializes {X : Scheme.{u}} {a b : X} : a ≤ b ↔ b ⤳ a
+\end{lstlisting}
+
+\textbf{Natural Language:} Every scheme carries a natural preorder structure given by specialization: $a \leq b$ if and only if $b$ specializes to $a$. This captures the geometric intuition that generic points are "larger" than their specializations.
+
+\section{Morphism Operations}
+
+\subsection{Induced Maps on Sections}
+
+\begin{lstlisting}
+abbrev app (U : Y.Opens) : Γ(Y, U) ⟶ Γ(X, f ⁻¹ᵁ U) := f.c.app (op U)
+
+abbrev appTop : Γ(Y, ⊤) ⟶ Γ(X, ⊤) := f.app ⊤
+\end{lstlisting}
+
+\textbf{Natural Language:} A morphism $f: X \to Y$ induces a map on sections: for any open set $U \subseteq Y$, we get a ring homomorphism $\Gamma(Y, U) \to \Gamma(X, f^{-1}U)$. The special case of global sections gives us $\Gamma(Y, \top) \to \Gamma(X, \top)$.
+
+\subsection{Naturality}
+
+\begin{lstlisting}
+lemma naturality (i : op U' ⟶ op U) :
+    Y.presheaf.map i ≫ f.app U = f.app U' ≫ X.presheaf.map ((Opens.map f.base).map i.unop).op
+\end{lstlisting}
+
+\textbf{Natural Language:} The induced maps on sections are natural with respect to restriction maps. This means that restricting sections and then applying the induced map is the same as applying the induced map and then restricting.
+
+\subsection{Stalk Maps}
+
+\begin{lstlisting}
+def stalkMap (x : X) : Y.presheaf.stalk (f.base x) ⟶ X.presheaf.stalk x :=
+  f.toLRSHom.stalkMap x
+\end{lstlisting}
+
+\textbf{Natural Language:} A morphism $f: X \to Y$ induces local ring homomorphisms between stalks: for each point $x \in X$, we get a map from the stalk at $f(x)$ in $Y$ to the stalk at $x$ in $X$.
+
+\section{The Spec Construction}
+
+\subsection{Spec as a Scheme}
+
+\begin{lstlisting}
+def Spec (R : CommRingCat) : Scheme where
+  toLocallyRingedSpace := Spec.toLocallyRingedSpace.obj (op R)
+  local_affine x := ⟨⟨Set.univ, isOpen_univ⟩, x.2⟩, R, ⟨(Spec.toLocallyRingedSpace.obj (op R)).restrictTopIso⟩⟩
+\end{lstlisting}
+
+\textbf{Natural Language:} For any commutative ring $R$, we can construct a scheme $\mathrm{Spec}(R)$ whose underlying locally ringed space is the prime spectrum of $R$ with the structure sheaf. This scheme is "globally affine" in the sense that the entire space is isomorphic to a spectrum.
+
+\subsection{Functoriality}
+
+\begin{lstlisting}
+def Spec.map {R S : CommRingCat} (f : R ⟶ S) : Spec S ⟶ Spec R :=
+  (Spec.toLocallyRingedSpace.map f.op).hom
+
+theorem Spec.map_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
+  Spec.map (f ≫ g) = Spec.map g ≫ Spec.map f
+\end{lstlisting}
+
+\textbf{Natural Language:} The Spec construction is functorial: a ring homomorphism $f: R \to S$ induces a scheme morphism $\mathrm{Spec}(f): \mathrm{Spec}(S) \to \mathrm{Spec}(R)$ (note the direction reversal). This makes Spec a contravariant functor from commutative rings to schemes.
+
+\section{Basic Opens}
+
+\subsection{Definition}
+
+\begin{lstlisting}
+def basicOpen : X.Opens :=
+  { carrier := { x | IsUnit (X.presheaf.germ U x hx f) }
+    is_open' := ... }
+\end{lstlisting}
+
+\textbf{Natural Language:} For a section $f \in \Gamma(X, U)$, the basic open $D(f)$ consists of all points $x \in U$ where $f$ becomes a unit in the stalk at $x$. This generalizes the classical notion of basic opens in affine schemes.
+
+\subsection{Properties}
+
+\begin{lstlisting}
+theorem basicOpen_mul : X.basicOpen (f * g) = X.basicOpen f ⊓ X.basicOpen g
+
+theorem basicOpen_zero (U : X.Opens) : X.basicOpen (0 : Γ(X, U)) = ⊥
+
+theorem basicOpen_one : X.basicOpen (1 : Γ(X, U)) = U
+\end{lstlisting}
+
+\textbf{Natural Language:} Basic opens behave well with respect to ring operations: the basic open of a product is the intersection of the basic opens, the basic open of zero is empty, and the basic open of the unit element is the entire open set.
+
+\section{Zero Loci}
+
+\subsection{Definition and Properties}
+
+\begin{lstlisting}
+def zeroLocus {U : X.Opens} (s : Set Γ(X, U)) : Set X := X.toRingedSpace.zeroLocus s
+
+lemma zeroLocus_isClosed {U : X.Opens} (s : Set Γ(X, U)) :
+  IsClosed (X.zeroLocus s)
+\end{lstlisting}
+
+\textbf{Natural Language:} The zero locus $V(s)$ of a set of sections $s \subseteq \Gamma(X, U)$ is the set of points where all sections in $s$ vanish. Zero loci are always closed subsets.
+
+\subsection{Relationship to Basic Opens}
+
+\begin{lstlisting}
+lemma codisjoint_zeroLocus {U : X.Opens}
+  {f : Γ(X, U)} : Codisjoint (X.zeroLocus {f} : Set X) (X.basicOpen f : Set X)
+\end{lstlisting}
+
+\textbf{Natural Language:} The zero locus of a section and its basic open are codisjoint (their union covers the underlying open set). This expresses the fundamental duality between "where a function vanishes" and "where a function is invertible."
+
+\section{Global Sections Functor}
+
+\subsection{Definition}
+
+\begin{lstlisting}
+def Γ : Schemeᵒᵖ ⥤ CommRingCat :=
+  Scheme.forgetToLocallyRingedSpace.op ⋙ LocallyRingedSpace.Γ
+\end{lstlisting}
+
+\textbf{Natural Language:} The global sections functor $\Gamma$ assigns to each scheme its ring of global sections and to each morphism the induced ring homomorphism. This is a contravariant functor from schemes to commutative rings.
+
+\subsection{Spec-Γ Identity}
+
+\begin{lstlisting}
+def SpecΓIdentity : Scheme.Spec.rightOp ⋙ Scheme.Γ ≅ 𝟭 _ :=
+
+def ΓSpecIso : Γ(Spec R, ⊤) ≅ R := SpecΓIdentity.app R
+\end{lstlisting}
+
+\textbf{Natural Language:} There is a natural isomorphism between the global sections of $\mathrm{Spec}(R)$ and $R$ itself. This is a fundamental relationship that will be part of the adjunction between $\Gamma$ and $\mathrm{Spec}$.
+
+\section{Forgetful Functors}
+
+\subsection{To Locally Ringed Spaces}
+
+\begin{lstlisting}
+def forgetToLocallyRingedSpace : Scheme ⥤ LocallyRingedSpace where
+  obj X := X.toLocallyRingedSpace
+  map f := f.toLRSHom
+
+instance : forgetToLocallyRingedSpace.Full
+instance : forgetToLocallyRingedSpace.Faithful
+\end{lstlisting}
+
+\textbf{Natural Language:} There is a fully faithful forgetful functor from schemes to locally ringed spaces. This makes the category of schemes a full subcategory of locally ringed spaces.
+
+\subsection{To Topological Spaces}
+
+\begin{lstlisting}
+def forgetToTop : Scheme ⥤ TopCat :=
+  forgetToLocallyRingedSpace ⋙ LocallyRingedSpace.forgetToTop
+\end{lstlisting}
+
+\textbf{Natural Language:} By composing forgetful functors, we can also view schemes as topological spaces, forgetting all the algebraic structure.
+
+\section{Special Cases and Examples}
+
+\subsection{Empty Scheme}
+
+\begin{lstlisting}
+def empty : Scheme where
+  toLocallyRingedSpace := LocallyRingedSpace.empty
+  local_affine := False.elim
+
+instance : EmptyCollection Scheme
+instance : Inhabited Scheme
+\end{lstlisting}
+
+\textbf{Natural Language:} There is an empty scheme, which serves as the initial object in certain contexts. The category of schemes is also inhabited (has a canonical element).
+
+\subsection{Field Spectra}
+
+\begin{lstlisting}
+instance {K} [Field K] : Unique Spec(K) :=
+
+lemma default_asIdeal {K} [Field K] : (default : Spec(K)).asIdeal = ⊥
+\end{lstlisting}
+
+\textbf{Natural Language:} The spectrum of a field is a single point, corresponding to the zero ideal (which is the unique maximal ideal in a field).
+
+\end{document}

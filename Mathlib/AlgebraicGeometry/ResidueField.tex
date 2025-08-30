@@ -1,0 +1,363 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Define colors for Lean syntax highlighting
+\definecolor{leanKeyword}{RGB}{0, 0, 255}       % Blue for keywords
+\definecolor{leanType}{RGB}{139, 0, 139}        % Dark magenta for types
+\definecolor{leanString}{RGB}{0, 128, 0}        % Green for strings
+\definecolor{leanComment}{RGB}{128, 128, 128}   % Gray for comments
+\definecolor{leanDefinition}{RGB}{255, 140, 0}  % Dark orange for definitions
+\definecolor{leanAttribute}{RGB}{255, 20, 147}  % Deep pink for attributes
+\definecolor{leanBackground}{RGB}{250, 250, 250} % Light gray background
+
+% Define Lean language for listings
+\lstdefinelanguage{Lean}{
+  % Keywords
+  morekeywords=[1]{def, theorem, lemma, instance, class, structure, inductive,
+    axiom, constant, variable, namespace, section, noncomputable, protected,
+    private, abbrev, example, open, attribute, local, mutual, by, where,
+    extends, deriving, end, import, prelude, theory, with, without, using,
+    match, if, then, else, fun, have, show, from, let, in, do, begin, calc},
+  % Types and Type constructors
+  morekeywords=[2]{Type, Prop, Sort, Nat, Int, Bool, String, Char, List,
+    Option, Unit, Prod, Sum, Sigma, Subtype, Set, Scheme, CommRingCat,
+    AffineScheme, Opens, IsAffine, IsAffineOpen, Spec, Category, Functor,
+    Iso, IsIso, CompactSpace, IsCompact, IsOpenImmersion, Equiv, Hom,
+    Field, IsLocalRing, ResidueField, IsPreimmersion, Epi},
+  % Tactics (if they appear)
+  morekeywords=[3]{simp, rfl, exact, apply, intro, cases, induction, refl,
+    constructor, assumption, contradiction, trivial, sorry, admit, rw,
+    convert, infer_instance, ext, rintro, obtain, refine, dsimp},
+  % Sensitive
+  sensitive=true,
+  % Comments
+  morecomment=[l]{--},
+  morecomment=[n]{/-}{-/},
+  % Strings
+  morestring=[b]",
+  % Style
+  keywordstyle=[1]\color{leanKeyword}\bfseries,
+  keywordstyle=[2]\color{leanType}\bfseries,
+  keywordstyle=[3]\color{leanDefinition}\itshape,
+  commentstyle=\color{leanComment}\itshape,
+  stringstyle=\color{leanString},
+  % Highlight attributes
+  moredelim=[is][\color{leanAttribute}]{@[}{]},
+  moredelim=[is][\color{leanAttribute}]{\#[}{]},
+}
+
+\lstset{
+  language=Lean,
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{leanBackground},
+  breaklines=true,
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{gray!30},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=5pt,
+  showstringspaces=false,
+  captionpos=b,
+  xleftmargin=10pt,
+  framexleftmargin=10pt,
+  % Unicode replacements for mathematical symbols
+  literate={Γ}{{$\Gamma$}}1
+           {⊤}{{$\top$}}1
+           {⟶}{{$\to$}}2
+           {≅}{{$\cong$}}1
+           {⊆}{{$\subseteq$}}1
+           {⨆}{{$\bigsqcup$}}1
+           {∈}{{$\in$}}1
+           {∃}{{$\exists$}}1
+           {∧}{{$\land$}}1
+           {⁻¹ᵁ}{{$^{-1}U$}}3
+           {⁻¹}{{$^{-1}$}}2
+           {≫}{{>>}}1
+           {≤}{{$\leq$}}1
+           {ᵒᵖ}{{$^{op}$}}2
+           {⥤}{{$\Rightarrow$}}2
+           {≌}{{$\simeq$}}1
+           {⋙}{{$\ggg$}}1
+           {∀}{{$\forall$}}1
+           {↑}{{$\uparrow$}}1
+           {𝒰}{{$\mathcal{U}$}}1
+           {𝟙}{{$\mathbb{1}$}}1
+           {''ᵁ}{{''U}}2
+           {≪≫}{{$\ll\gg$}}2
+           {ι}{{$\iota$}}1
+           {→}{{$\to$}}1
+           {ᵁ}{{U}}1
+           {:=}{{$\mathrel{:=}$}}2
+           {×}{{$\times$}}1
+           {⧸}{{$/\!/$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {⟨}{{$\langle$}}1
+           {⟩}{{$\rangle$}}1
+           {α}{{$\alpha$}}1
+           {β}{{$\beta$}}1
+           {γ}{{$\gamma$}}1
+           {δ}{{$\delta$}}1
+           {ε}{{$\varepsilon$}}1
+           {λ}{{$\lambda$}}1
+           {μ}{{$\mu$}}1
+           {σ}{{$\sigma$}}1
+           {τ}{{$\tau$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {ω}{{$\omega$}}1
+           {∞}{{$\infty$}}1
+           {∂}{{$\partial$}}1
+           {∇}{{$\nabla$}}1
+           {κ}{{$\kappa$}}1
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{instance}{Instance}
+
+\title{Residue Fields of Schemes in Mathlib4\\
+\large A Companion to \texttt{ResidueField.lean}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document provides a natural language companion to the \texttt{ResidueField.lean} file in Mathlib4. The file develops the theory of residue fields for points on schemes, which is fundamental to understanding the local behavior of schemes at individual points. The residue field captures the "infinitesimal" or "tangent" information at a point and is essential for studying geometric properties like smoothness, dimension, and rational points.
+
+In classical algebraic geometry, the residue field of a point on an affine variety corresponds to the quotient of the coordinate ring by the maximal ideal defining that point. In scheme theory, this generalizes to the residue field of the local ring (stalk) at any point, providing a universal field that encodes the local geometric behavior.
+
+The residue field is particularly important for understanding:
+\begin{itemize}
+\item The local nature of geometric properties
+\item Rational points and their behavior
+\item Morphisms between schemes at the level of individual points
+\item The relationship between algebraic and geometric properties
+\end{itemize}
+
+\section{Basic Definitions}
+
+\subsection{Residue Field}
+
+\begin{lstlisting}
+def residueField (x : X) : CommRingCat :=
+  CommRingCat.of <| IsLocalRing.ResidueField (X.presheaf.stalk x)
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} The residue field $\kappa(x)$ of a point $x$ in a scheme $X$ is defined as the residue field of the local ring $\mathcal{O}_{X,x}$ (the stalk at $x$). Since stalks are always local rings, they have a unique maximal ideal, and the residue field is the quotient by this maximal ideal.
+
+Geometrically, the residue field captures the "infinitesimal neighborhood" of the point $x$. It encodes information about how the scheme looks at an infinitesimally small level around that point.
+
+\subsection{Field Structure}
+
+\begin{lstlisting}
+instance (x : X) : Field (X.residueField x) :=
+  inferInstanceAs <| Field (IsLocalRing.ResidueField (X.presheaf.stalk x))
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} The residue field is indeed a field, which follows from the general theory of local rings. This field structure is crucial for many applications and ensures that residue fields behave like classical fields for geometric purposes.
+
+\subsection{Canonical Residue Map}
+
+\begin{lstlisting}
+def residue (X : Scheme.{u}) (x) : X.presheaf.stalk x ⟶ X.residueField x :=
+  CommRingCat.ofHom (IsLocalRing.residue (X.presheaf.stalk x))
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} The residue map is the canonical surjective ring homomorphism from the stalk $\mathcal{O}_{X,x}$ to the residue field $\kappa(x)$. This map sends elements to their equivalence classes modulo the maximal ideal, effectively "evaluating" them at the point $x$.
+
+The residue map is always surjective and captures the process of "taking values at a point" for regular functions.
+
+\section{Evaluation Maps}
+
+\subsection{Evaluation at Points}
+
+\begin{lstlisting}
+def evaluation (U : X.Opens) (x : X) (hx : x ∈ U) : Γ(X, U) ⟶ X.residueField x :=
+  X.presheaf.germ U x hx ≫ X.residue _
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} For any open subset $U$ containing a point $x$, we have a canonical evaluation map from sections over $U$ to the residue field at $x$. This map represents the geometric process of "evaluating a function at a point."
+
+The evaluation map is the composition of two natural processes:
+\begin{enumerate}
+\item Taking the germ: $\Gamma(X, U) \to \mathcal{O}_{X,x}$
+\item Taking the residue: $\mathcal{O}_{X,x} \to \kappa(x)$
+\end{enumerate}
+
+\subsection{Relationship with Basic Opens}
+
+\begin{lstlisting}
+@[simp]
+lemma evaluation_eq_zero_iff_notMem_basicOpen (x : X) (hx : x ∈ U) (f : Γ(X, U)) :
+    X.evaluation U x hx f = 0 ↔ x ∉ X.basicOpen f :=
+  X.toLocallyRingedSpace.evaluation_eq_zero_iff_notMem_basicOpen ⟨x, hx⟩ f
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} A section $f$ evaluates to zero at a point $x$ if and only if $x$ does not lie in the basic open set $D(f)$ where $f$ is invertible. This fundamental result connects the algebraic notion of evaluation with the geometric notion of basic open sets.
+
+This equivalence captures the intuitive idea that a function "vanishes" at a point precisely when that point lies outside the open set where the function is non-zero (and hence invertible).
+
+\subsection{Global Evaluation}
+
+\begin{lstlisting}
+abbrev Γevaluation (x : X) : Γ(X, ⊤) ⟶ X.residueField x :=
+  X.evaluation ⊤ x trivial
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} The global evaluation map takes global sections (functions defined on the entire scheme) and evaluates them at a specific point. This is the scheme-theoretic generalization of the classical notion of evaluating a polynomial at a point.
+
+\section{Functoriality}
+
+\subsection{Morphism-Induced Maps}
+
+\begin{lstlisting}
+def Hom.residueFieldMap (f : X.Hom Y) (x : X) :
+    Y.residueField (f.base x) ⟶ X.residueField x :=
+  CommRingCat.ofHom <| IsLocalRing.ResidueField.map (f.stalkMap x).hom
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} A morphism $f: X \to Y$ induces a map of residue fields in the opposite direction: from $\kappa(f(x))$ to $\kappa(x)$. This contravariant functoriality reflects the fact that morphisms of schemes correspond to pullbacks of functions.
+
+The direction reversal is natural: if $f: X \to Y$ is a morphism and $g$ is a function near $f(x)$ on $Y$, then $f^*g$ is a function near $x$ on $X$, and the values are related by this residue field map.
+
+\subsection{Naturality}
+
+\begin{lstlisting}
+@[reassoc]
+lemma evaluation_naturality {V : Opens Y} (x : X) (hx : f.base x ∈ V) :
+    Y.evaluation V (f.base x) hx ≫ f.residueFieldMap x =
+      f.app V ≫ X.evaluation (f ⁻¹ᵁ V) x hx :=
+  LocallyRingedSpace.evaluation_naturality f.1 ⟨x, hx⟩
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} Evaluation commutes with morphisms in the natural way: evaluating a section on $Y$ at $f(x)$ and then pulling back to $X$ gives the same result as pulling back the section to $X$ and then evaluating at $x$.
+
+This naturality is crucial for ensuring that evaluation behaves consistently across morphisms and reflects the functorial nature of the residue field construction.
+
+\section{Canonical Morphisms}
+
+\subsection{From Spec of Residue Field}
+
+\begin{lstlisting}
+def fromSpecResidueField (X : Scheme) (x : X) :
+    Spec (X.residueField x) ⟶ X :=
+  Spec.map (X.residue x) ≫ X.fromSpecStalk x
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} For any point $x$ in a scheme $X$, there is a canonical morphism from $\mathrm{Spec}(\kappa(x))$ to $X$. This morphism represents the "inclusion of the point" and is fundamental for understanding how points embed into schemes.
+
+The construction factors through the spectrum of the stalk, reflecting the algebraic relationship between the residue field and the local ring at the point.
+
+\subsection{Properties of the Canonical Morphism}
+
+\begin{lstlisting}
+@[simp]
+lemma fromSpecResidueField_apply (x : X.carrier) (s : Spec (X.residueField x)) :
+    (X.fromSpecResidueField x).base s = x := by
+  simp [fromSpecResidueField]
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} The canonical morphism from $\mathrm{Spec}(\kappa(x))$ to $X$ maps every point of the spectrum (which consists of a single point since $\kappa(x)$ is a field) to the original point $x$. This formalizes the idea that $\mathrm{Spec}(\kappa(x))$ represents the "infinitesimal neighborhood" of $x$.
+
+\section{Universal Property}
+
+\subsection{Morphisms from Spectra of Fields}
+
+\begin{lstlisting}
+def SpecToEquivOfField (K : Type u) [Field K] (X : Scheme.{u}) :
+    (Spec(K) ⟶ X) ≃ Σ x, X.residueField x ⟶ .of K where
+  toFun f :=
+    ⟨_, X.descResidueField (Scheme.stalkClosedPointTo f)⟩
+  invFun xf := Spec.map xf.2 ≫ X.fromSpecResidueField xf.1
+\end{lstlisting}
+
+\textbf{Mathematical Significance:} This establishes a fundamental bijection: morphisms from the spectrum of a field $K$ to a scheme $X$ correspond bijectively to pairs consisting of a point $x \in X$ and a field homomorphism $\kappa(x) \to K$.
+
+This universal property is crucial for understanding rational points and provides the scheme-theoretic foundation for the classical notion of "points with values in a field."
+
+For example:
+\begin{itemize}
+\item Rational points (over $\mathbb{Q}$) correspond to morphisms $\mathrm{Spec}(\mathbb{Q}) \to X$
+\item Points over finite fields correspond to morphisms $\mathrm{Spec}(\mathbb{F}_q) \to X$
+\item Complex points correspond to morphisms $\mathrm{Spec}(\mathbb{C}) \to X$
+\end{itemize}
+
+\section{Geometric Interpretation}
+
+\subsection{Classical Correspondence}
+
+In classical algebraic geometry over algebraically closed fields, residue fields are typically trivial (isomorphic to the base field). However, in more general settings:
+
+\begin{itemize}
+\item \textbf{Rational Points}: For schemes over $\mathbb{Q}$, residue fields capture the "field of definition" of each point
+\item \textbf{Finite Fields}: For schemes over finite fields, residue fields determine the degree of field extensions needed to define points
+\item \textbf{Arithmetic Geometry}: Residue fields encode crucial arithmetic information about how points are defined over various fields
+\end{itemize}
+
+\subsection{Local Nature}
+
+The residue field captures the most refined local information about a scheme at a point:
+
+\begin{itemize}
+\item \textbf{Dimension}: The transcendence degree of the residue field over the base field gives local dimension information
+\item \textbf{Smoothness}: Properties of the residue field help detect singularities and smooth points
+\item \textbf{Separability}: The separability of residue field extensions captures geometric properties like étaleness
+\end{itemize}
+
+\subsection{Functoriality and Base Change}
+
+The contravariant functoriality of residue fields reflects fundamental properties:
+
+\begin{itemize}
+\item \textbf{Pullback Nature}: Morphisms correspond to pullbacks of functions, hence the contravariance
+\item \textbf{Base Change}: Residue fields behave well under base change, preserving geometric properties
+\item \textbf{Galois Theory}: Residue field extensions encode Galois-theoretic information about the geometry
+\end{itemize}
+
+\section{Applications}
+
+\subsection{Rational Points}
+
+The residue field theory provides the foundation for studying rational points on schemes:
+
+\begin{itemize}
+\item Points with residue field isomorphic to the base field correspond to "rational points"
+\item Extensions of residue fields correspond to points defined over field extensions
+\item The degree of the residue field extension measures the "complexity" of defining the point
+\end{itemize}
+
+\subsection{Dimension Theory}
+
+Residue fields play a crucial role in dimension theory:
+
+\begin{itemize}
+\item The Krull dimension of a scheme can be computed using residue field transcendence degrees
+\item Chains of specializations correspond to towers of residue field extensions
+\item Dimension inequalities often involve residue field properties
+\end{itemize}
+
+\subsection{Morphism Properties}
+
+Many properties of morphisms can be detected through their behavior on residue fields:
+
+\begin{itemize}
+\item \textbf{Finite morphisms}: Correspond to finite residue field extensions
+\item \textbf{Étale morphisms}: Correspond to separable residue field extensions of the same transcendence degree
+\item \textbf{Smooth morphisms}: Have well-behaved residue field extensions with controlled ramification
+\end{itemize}
+
+The residue field construction thus provides a fundamental bridge between local algebraic data and global geometric properties, making it an essential tool in modern algebraic geometry.
+
+\end{document}
