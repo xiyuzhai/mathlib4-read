@@ -1,5 +1,190 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+% Better Unicode support
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{newunicodechar}
+\usepackage{stmaryrd}
+
+% Define Unicode characters
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{‹}{\ensuremath{\langle}}
+\newunicodechar{›}{\ensuremath{\rangle}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{⟶}{\ensuremath{\longrightarrow}}
+\newunicodechar{↪}{\ensuremath{\hookrightarrow}}
+\newunicodechar{≅}{\ensuremath{\cong}}
+\newunicodechar{≃}{\ensuremath{\simeq}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{⊇}{\ensuremath{\supseteq}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∧}{\ensuremath{\land}}
+\newunicodechar{∨}{\ensuremath{\lor}}
+\newunicodechar{≤}{\ensuremath{\leq}}
+\newunicodechar{≥}{\ensuremath{\geq}}
+\newunicodechar{≠}{\ensuremath{\neq}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{≈}{\ensuremath{\approx}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⊗}{\ensuremath{\otimes}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{⊤}{\ensuremath{\top}}
+\newunicodechar{⊥}{\ensuremath{\bot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{∂}{\ensuremath{\partial}}
+\newunicodechar{∇}{\ensuremath{\nabla}}
+\newunicodechar{∫}{\ensuremath{\int}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⋯}{\ensuremath{\cdots}}
+\newunicodechar{⨆}{\ensuremath{\bigsqcup}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{⥤}{\ensuremath{\Rightarrow}}
+\newunicodechar{⋙}{\ensuremath{\ggg}}
+\newunicodechar{≌}{\ensuremath{\fallingdotseq}}
+\newunicodechar{↑}{\ensuremath{\uparrow}}
+\newunicodechar{↓}{\ensuremath{\downarrow}}
+\newunicodechar{⇒}{\ensuremath{\Rightarrow}}
+\newunicodechar{⇐}{\ensuremath{\Leftarrow}}
+\newunicodechar{⇔}{\ensuremath{\Leftrightarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{⊣}{\ensuremath{\dashv}}
+\newunicodechar{⊓}{\ensuremath{\sqcap}}
+\newunicodechar{⊔}{\ensuremath{\sqcup}}
+\newunicodechar{⋮}{\ensuremath{\vdots}}
+\newunicodechar{⋱}{\ensuremath{\ddots}}
+\newunicodechar{√}{\ensuremath{\sqrt{}}}
+\newunicodechar{∝}{\ensuremath{\propto}}
+\newunicodechar{∼}{\ensuremath{\sim}}
+\newunicodechar{≲}{\ensuremath{\lesssim}}
+\newunicodechar{≳}{\ensuremath{\gtrsim}}
+\newunicodechar{⊂}{\ensuremath{\subset}}
+\newunicodechar{⊃}{\ensuremath{\supset}}
+\newunicodechar{⊊}{\ensuremath{\subsetneq}}
+\newunicodechar{⊋}{\ensuremath{\supsetneq}}
+\newunicodechar{∖}{\ensuremath{\setminus}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{∤}{\ensuremath{\nmid}}
+\newunicodechar{∥}{\ensuremath{\parallel}}
+\newunicodechar{∦}{\ensuremath{\nparallel}}
+\newunicodechar{⊙}{\ensuremath{\odot}}
+\newunicodechar{⊖}{\ensuremath{\ominus}}
+\newunicodechar{⊘}{\ensuremath{\oslash}}
+\newunicodechar{⊚}{\ensuremath{\circledcirc}}
+\newunicodechar{⊛}{\ensuremath{\circledast}}
+\newunicodechar{⊝}{\ensuremath{\circleddash}}
+\newunicodechar{◯}{\ensuremath{\bigcirc}}
+\newunicodechar{⬝}{\ensuremath{\cdot}}
+\newunicodechar{▸}{\ensuremath{\blacktriangleright}}
+
+% Greek letters
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{γ}{\ensuremath{\gamma}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{ζ}{\ensuremath{\zeta}}
+\newunicodechar{η}{\ensuremath{\eta}}
+\newunicodechar{θ}{\ensuremath{\theta}}
+\newunicodechar{ι}{\ensuremath{\iota}}
+\newunicodechar{κ}{\ensuremath{\kappa}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+\newunicodechar{μ}{\ensuremath{\mu}}
+\newunicodechar{ν}{\ensuremath{\nu}}
+\newunicodechar{ξ}{\ensuremath{\xi}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{ρ}{\ensuremath{\rho}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{τ}{\ensuremath{\tau}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{χ}{\ensuremath{\chi}}
+\newunicodechar{ψ}{\ensuremath{\psi}}
+\newunicodechar{ω}{\ensuremath{\omega}}
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
+\newunicodechar{Π}{\ensuremath{\Pi}}
+\newunicodechar{Ω}{\ensuremath{\Omega}}
+
+% Superscripts and subscripts  
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{³}{\ensuremath{^{3}}}
+\newunicodechar{⁴}{\ensuremath{^{4}}}
+\newunicodechar{⁵}{\ensuremath{^{5}}}
+\newunicodechar{⁶}{\ensuremath{^{6}}}
+\newunicodechar{⁷}{\ensuremath{^{7}}}
+\newunicodechar{⁸}{\ensuremath{^{8}}}
+\newunicodechar{⁹}{\ensuremath{^{9}}}
+\newunicodechar{⁰}{\ensuremath{^{0}}}
+\newunicodechar{ⁿ}{\ensuremath{^{n}}}
+\newunicodechar{ᵒ}{\ensuremath{^{o}}}
+\newunicodechar{ᵖ}{\ensuremath{^{p}}}
+\newunicodechar{ᵐ}{\ensuremath{^{m}}}
+\newunicodechar{ᵢ}{\ensuremath{_{i}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{₃}{\ensuremath{_{3}}}
+\newunicodechar{₄}{\ensuremath{_{4}}}
+\newunicodechar{₅}{\ensuremath{_{5}}}
+\newunicodechar{₆}{\ensuremath{_{6}}}
+\newunicodechar{₇}{\ensuremath{_{7}}}
+\newunicodechar{₈}{\ensuremath{_{8}}}
+\newunicodechar{₉}{\ensuremath{_{9}}}
+\newunicodechar{ₙ}{\ensuremath{_{n}}}
+\newunicodechar{ₘ}{\ensuremath{_{m}}}
+
+% Mathematical alphabets
+\newunicodechar{𝒰}{\ensuremath{\mathcal{U}}}
+\newunicodechar{𝒱}{\ensuremath{\mathcal{V}}}
+\newunicodechar{𝒲}{\ensuremath{\mathcal{W}}}
+\newunicodechar{𝒳}{\ensuremath{\mathcal{X}}}
+\newunicodechar{𝒴}{\ensuremath{\mathcal{Y}}}
+\newunicodechar{𝒵}{\ensuremath{\mathcal{Z}}}
+\newunicodechar{𝓐}{\ensuremath{\mathcal{A}}}
+\newunicodechar{𝓑}{\ensuremath{\mathcal{B}}}
+\newunicodechar{𝓒}{\ensuremath{\mathcal{C}}}
+\newunicodechar{𝓓}{\ensuremath{\mathcal{D}}}
+\newunicodechar{𝓔}{\ensuremath{\mathcal{E}}}
+\newunicodechar{𝓕}{\ensuremath{\mathcal{F}}}
+\newunicodechar{𝓖}{\ensuremath{\mathcal{G}}}
+\newunicodechar{𝓗}{\ensuremath{\mathcal{H}}}
+\newunicodechar{𝓘}{\ensuremath{\mathcal{I}}}
+\newunicodechar{𝓙}{\ensuremath{\mathcal{J}}}
+\newunicodechar{𝓚}{\ensuremath{\mathcal{K}}}
+\newunicodechar{𝓛}{\ensuremath{\mathcal{L}}}
+\newunicodechar{𝓜}{\ensuremath{\mathcal{M}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{𝓞}{\ensuremath{\mathcal{O}}}
+\newunicodechar{𝓟}{\ensuremath{\mathcal{P}}}
+\newunicodechar{𝓠}{\ensuremath{\mathcal{Q}}}
+\newunicodechar{𝓡}{\ensuremath{\mathcal{R}}}
+\newunicodechar{𝓢}{\ensuremath{\mathcal{S}}}
+\newunicodechar{𝓣}{\ensuremath{\mathcal{T}}}
+\newunicodechar{𝟙}{\ensuremath{\mathbb{1}}}
+\newunicodechar{𝟘}{\ensuremath{\mathbb{0}}}
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+
+
 \usepackage{amsmath, amsthm, amssymb}
 \usepackage{xcolor}
 \usepackage{listings}
@@ -72,57 +257,17 @@
   captionpos=b,
   xleftmargin=10pt,
   framexleftmargin=10pt,
-  % Unicode replacements for mathematical symbols
-  literate={Γ}{{$\Gamma$}}1
-           {⊤}{{$\top$}}1
-           {⟶}{{$\to$}}2
-           {≅}{{$\cong$}}1
-           {⊆}{{$\subseteq$}}1
-           {⨆}{{$\bigsqcup$}}1
-           {∈}{{$\in$}}1
-           {∃}{{$\exists$}}1
-           {∧}{{$\land$}}1
-           {⁻¹ᵁ}{{$^{-1}U$}}3
-           {⁻¹}{{$^{-1}$}}2
-           {≫}{{>>}}1
-           {≤}{{$\leq$}}1
-           {ᵒᵖ}{{$^{op}$}}2
-           {⥤}{{$\Rightarrow$}}2
-           {≌}{{$\simeq$}}1
-           {⋙}{{$\ggg$}}1
-           {∀}{{$\forall$}}1
-           {↑}{{$\uparrow$}}1
-           {𝒰}{{$\mathcal{U}$}}1
-           {𝟙}{{$\mathbb{1}$}}1
-           {''ᵁ}{{''U}}2
-           {≪≫}{{$\ll\gg$}}2
-           {ι}{{$\iota$}}1
-           {→}{{$\to$}}1
-           {ᵁ}{{U}}1
+  }
+
+
+           {$^{-1}$}{{$^{-1}$}}2
+           {$^{op}$}{{$^{op}$}}2
+
+           {$\mathcal{U}$}{{$\mathcal{U}$}}1
+           {$\mathbb{1}$}{{$\mathbb{1}$}}
+
            {:=}{{$\mathrel{:=}$}}2
-           {×}{{$\times$}}1
-           {⧸}{{$/\!/$}}1
-           {↔}{{$\leftrightarrow$}}1
-           {⟨}{{$\langle$}}1
-           {⟩}{{$\rangle$}}1
-           {α}{{$\alpha$}}1
-           {β}{{$\beta$}}1
-           {γ}{{$\gamma$}}1
-           {δ}{{$\delta$}}1
-           {ε}{{$\varepsilon$}}1
-           {λ}{{$\lambda$}}1
-           {μ}{{$\mu$}}1
-           {σ}{{$\sigma$}}1
-           {τ}{{$\tau$}}1
-           {φ}{{$\varphi$}}1
-           {ψ}{{$\psi$}}1
-           {ω}{{$\omega$}}1
-           {∞}{{$\infty$}}1
-           {∂}{{$\partial$}}1
-           {∇}{{$\nabla$}}1
-           {⊓}{{$\sqcap$}}1
-           {⊣}{{$\dashv$}}1
-           {''ᵁ}{{$f_{*}U$}}3
+
 }
 
 \theoremstyle{definition}
@@ -196,7 +341,7 @@ def opensRange : Y.Opens :=
 abbrev opensFunctor : X.Opens ⥤ Y.Opens :=
   Opens.map f.base
 
-lemma image_le_image_of_le {U V : X.Opens} (e : U ≤ V) : f ''ᵁ U ≤ f ''ᵁ V := by
+lemma image_le_image_of_le {U V : X.Opens} (e : U ≤ V) : f ^U U ≤ f ^U V := by
   exact Opens.map_mono f.base e
 \end{lstlisting}
 
@@ -205,10 +350,10 @@ lemma image_le_image_of_le {U V : X.Opens} (e : U ≤ V) : f ''ᵁ U ≤ f ''ᵁ
 \subsection{Image Properties}
 
 \begin{lstlisting}
-lemma image_top_eq_opensRange : f ''ᵁ ⊤ = f.opensRange := by
+lemma image_top_eq_opensRange : f ^U ⊤ = f.opensRange := by
   ext; exact Set.image_univ.symm
 
-lemma preimage_image_eq (U : X.Opens) : f ⁻¹ᵁ f ''ᵁ U = U := by
+lemma preimage_image_eq (U : X.Opens) : f ^{-1}U f ^U U = U := by
   ext x; exact ⟨fun ⟨y, hy, e⟩ => e ▸ hy, fun h => ⟨x, h, rfl⟩⟩
 \end{lstlisting}
 
@@ -217,7 +362,7 @@ lemma preimage_image_eq (U : X.Opens) : f ⁻¹ᵁ f ''ᵁ U = U := by
 \subsection{Injectivity}
 
 \begin{lstlisting}
-lemma image_injective : Function.Injective (f ''ᵁ ·) := by
+lemma image_injective : Function.Injective (f ^U ·) := by
   intro U V h
   rw [← preimage_image_eq f U, h, preimage_image_eq f V]
 \end{lstlisting}
@@ -239,9 +384,9 @@ lemma isIso_app (V : Y.Opens) (hV : V ≤ f.opensRange) : IsIso (f.app V) := by
 \subsection{Canonical App Isomorphism}
 
 \begin{lstlisting}
-def appIso (U) : Γ(Y, f ''ᵁ U) ≅ Γ(X, U) :=
-  { hom := f.app (f ''ᵁ U) ≫ X.presheaf.map (eqToHom (preimage_image_eq f U)).op
-    inv := X.presheaf.map (eqToHom (preimage_image_eq f U).symm).op ≫ (inv (f.app (f ''ᵁ U)))
+def appIso (U) : Γ(Y, f ^U U) ≅ Γ(X, U) :=
+  { hom := f.app (f ^U U) ≫ X.presheaf.map (eqToHom (preimage_image_eq f U)).op
+    inv := X.presheaf.map (eqToHom (preimage_image_eq f U).symm).op ≫ (inv (f.app (f ^U U)))
     -- isomorphism properties }
 \end{lstlisting}
 
@@ -264,8 +409,8 @@ theorem appIso_inv_naturality {U V : X.Opens} (i : op U ⟶ op V) :
 \begin{lstlisting}
 def IsOpenImmersion.opensEquiv {X Y : Scheme.{u}} (f : X ⟶ Y) [IsOpenImmersion f] :
     X.Opens ≃ f.opensRange.Opens :=
-  { toFun := fun U => ⟨(f ''ᵁ U).1, image_le_opensRange f U⟩
-    invFun := fun U => f ⁻¹ᵁ U.1
+  { toFun := fun U => ⟨(f ^U U).1, image_le_opensRange f U⟩
+    invFun := fun U => f ^{-1}U U.1
     left_inv := preimage_image_eq f
     right_inv := fun U => Subtype.ext (image_preimage_eq_opensRange_inter f U.1) }
 \end{lstlisting}
@@ -354,10 +499,10 @@ instance pullback_fst_of_right : IsOpenImmersion (pullback.fst g f) := by
 
 \begin{lstlisting}
 theorem range_pullback_snd_of_left :
-    Set.range (pullback.snd f g).base = (g ⁻¹ᵁ f.opensRange).1
+    Set.range (pullback.snd f g).base = (g ^{-1}U f.opensRange).1
 
 theorem opensRange_pullback_snd_of_left :
-    (pullback.snd f g).opensRange = g ⁻¹ᵁ f.opensRange
+    (pullback.snd f g).opensRange = g ^{-1}U f.opensRange
 \end{lstlisting}
 
 \textbf{Natural Language:} The range of the pullback morphism is exactly the preimage of the range of the original open immersion. This gives us a concrete description of pullbacks in terms of open sets.
@@ -415,9 +560,9 @@ The stability of open immersions under base change makes them important in desce
 
 \begin{lstlisting}
 lemma appLE_appIso_inv {X Y : Scheme.{u}} (f : X ⟶ Y) [IsOpenImmersion f] {U : Y.Opens}
-    {V : X.Opens} (e : V ≤ f ⁻¹ᵁ U) :
+    {V : X.Opens} (e : V ≤ f ^{-1}U U) :
     f.appLE U V e = (f.appIso V).inv ≫ 
-    Y.presheaf.map (homOfLE (show f ''ᵁ V ≤ U from image_le_image_of_le f e)).op
+    Y.presheaf.map (homOfLE (show f ^U V ≤ U from image_le_image_of_le f e)).op
 \end{lstlisting}
 
 \textbf{Natural Language:} Technical compatibility results showing how the various section maps interact with the canonical isomorphisms. These are essential for proving functoriality and naturality properties.
