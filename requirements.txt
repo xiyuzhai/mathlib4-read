@@ -1,0 +1,10 @@
+# Vector database and embeddings
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# Optional: For OpenAI embeddings
+openai>=1.0.0
+
+# Utilities
+tqdm>=4.65.0
+numpy>=1.24.0
