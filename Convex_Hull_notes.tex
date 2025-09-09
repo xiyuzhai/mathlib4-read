@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+
+\title{Analysis Module: Hull}
+\author{Mathlib4 Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Overview}
+\subsection{Convex hull}
+
+This file defines the convex hull of a set \\texttt{s} in a module. \\texttt{convexHull \mathbb{K} s} is the smallest convex
+set containing \\texttt{s}. In order theory speak, this is a closure operator.
+
+\subsubsection{Implementation notes}
+
+\\texttt{convexHull} is defined as a closure operator. This gives access to the \\texttt{ClosureOperator} API
+while the impact on writing code is minimal as \\texttt{convexHull \mathbb{K} s} is automatically elaborated as
+\\texttt{(convexHull \mathbb{K}) s}.
+
+\section{Key Definitions}
+\begin{definition}[convexHull]
+A def defining \texttt{convexHull}
+\end{definition}
+
+\begin{definition}[subset_convexHull]
+A theorem defining \texttt{subset_convexHull}
+\end{definition}
+
+\begin{definition}[convex_convexHull]
+A theorem defining \texttt{convex_convexHull}
+\end{definition}
+
+\begin{definition}[convexHull_eq_iInter]
+A theorem defining \texttt{convexHull_eq_iInter}
+\end{definition}
+
+\begin{definition}[mem_convexHull_iff]
+A theorem defining \texttt{mem_convexHull_iff}
+\end{definition}
+
+\begin{definition}[convexHull_min]
+A theorem defining \texttt{convexHull_min}
+\end{definition}
+
+\begin{definition}[Convex]
+A theorem defining \texttt{Convex}
+\end{definition}
+
+\begin{definition}[convexHull_mono]
+A theorem defining \texttt{convexHull_mono}
+\end{definition}
+
+\begin{definition}[convexHull_eq_self]
+A lemma defining \texttt{convexHull_eq_self}
+\end{definition}
+
+\begin{definition}[convexHull_univ]
+A theorem defining \texttt{convexHull_univ}
+\end{definition}
+
+
+\end{document}

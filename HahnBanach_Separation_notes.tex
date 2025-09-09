@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+
+\title{Analysis Module: Separation}
+\author{Mathlib4 Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Overview}
+\subsection{Separation Hahn-Banach theorem}
+
+In this file we prove the geometric Hahn-Banach theorem. For any two disjoint convex sets, there
+exists a continuous linear functional separating them, geometrically meaning that we can intercalate
+a plane between them.
+
+We provide many variations to stricten the result under more assumptions on the convex sets:
+* \\texttt{geometric\\_hahn\\_banach\\_open}: One set is open. Weak separation.
+* \\texttt{geometric\\_hahn\\_banach\\_open\\_point}, \\texttt{geometric\\_hahn\\_banach\\_point\\_open}: One set is open, the
+  other is a singleton. Weak separation.
+* \\texttt{geometric\\_hahn\\_banach\\_open\\_open}: Both sets are open. Semistrict separation.
+* \\texttt{geometric\\_hahn\\_banach\\_compact\\_closed}, \\texttt{geometric\\_hahn\\_banach\\_closed\\_compact}: One set is closed,
+  the other one is compact. Strict separation.
+* \\texttt{geometric\\_hahn\\_banach\\_point\\_closed}, \\texttt{geometric\\_hahn\\_banach\\_closed\\_point}: One set is closed, the
+  other one is a singleton. Strict separation.
+* \\texttt{geometric\\_hahn\\_banach\\_point\\_point}: Both sets are singletons. Strict separation.
+
+\subsubsection{TODO}
+
+* Eidelheit's theorem
+* \\texttt{Convex \mathbb{R} s \to interior (closure s) \subseteq s}
+
+\section{Key Definitions}
+\begin{definition}[separate_convex_open_set]
+A theorem defining \texttt{separate_convex_open_set}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_open]
+A theorem defining \texttt{geometric_hahn_banach_open}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_open_point]
+A theorem defining \texttt{geometric_hahn_banach_open_point}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_point_open]
+A theorem defining \texttt{geometric_hahn_banach_point_open}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_open_open]
+A theorem defining \texttt{geometric_hahn_banach_open_open}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_compact_closed]
+A theorem defining \texttt{geometric_hahn_banach_compact_closed}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_closed_compact]
+A theorem defining \texttt{geometric_hahn_banach_closed_compact}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_point_closed]
+A theorem defining \texttt{geometric_hahn_banach_point_closed}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_closed_point]
+A theorem defining \texttt{geometric_hahn_banach_closed_point}
+\end{definition}
+
+\begin{definition}[geometric_hahn_banach_point_point]
+A theorem defining \texttt{geometric_hahn_banach_point_point}
+\end{definition}
+
+\section{Main Theorems}
+\begin{theorem}[geometric_hahn_banach_point_point]
+See also `NormedSpace.eq_iff_forall_dual_eq`.
+\end{theorem}
+
+\begin{theorem}[iInter_halfSpaces_eq]
+A closed convex set is the intersection of the half-spaces containing it.
+\end{theorem}
+
+
+\end{document}

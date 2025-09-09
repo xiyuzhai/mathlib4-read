@@ -1,0 +1,107 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+
+\title{Analysis Module: Basic}
+\author{Mathlib4 Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Overview}
+\subsection{Local convexity}
+
+This file defines absorbent and balanced sets.
+
+An absorbent set is one that "surrounds" the origin. The idea is made precise by requiring that any
+point belongs to all large enough scalings of the set. This is the vector world analog of a
+topological neighborhood of the origin.
+
+A balanced set is one that is everywhere around the origin. This means that \\texttt{a • s \subseteq s} for all \\texttt{a}
+of norm less than \\texttt{1}.
+
+\subsubsection{Main declarations}
+
+For a module over a normed ring:
+* \\texttt{Absorbs}: A set \\texttt{s} absorbs a set \\texttt{t} if all large scalings of \\texttt{s} contain \\texttt{t}.
+* \\texttt{Absorbent}: A set \\texttt{s} is absorbent if every point eventually belongs to all large scalings of
+  \\texttt{s}.
+* \\texttt{Balanced}: A set \\texttt{s} is balanced if \\texttt{a • s \subseteq s} for all \\texttt{a} of norm less than \\texttt{1}.
+
+\subsubsection{References}
+
+* [H. H. Schaefer, *Topological Vector Spaces*][schaefer1966]
+
+\subsubsection{Tags}
+
+absorbent, balanced, locally convex, LCTVS
+
+\section{Key Definitions}
+\begin{definition}[Balanced]
+A def defining \texttt{Balanced}
+\end{definition}
+
+\begin{definition}[absorbs_iff_norm]
+A lemma defining \texttt{absorbs_iff_norm}
+\end{definition}
+
+\begin{definition}[Absorbs]
+A lemma defining \texttt{Absorbs}
+\end{definition}
+
+\begin{definition}[balanced_iff_smul_mem]
+A theorem defining \texttt{balanced_iff_smul_mem}
+\end{definition}
+
+\begin{definition}[balanced_iff_closedBall_smul]
+A theorem defining \texttt{balanced_iff_closedBall_smul}
+\end{definition}
+
+\begin{definition}[balanced_empty]
+A theorem defining \texttt{balanced_empty}
+\end{definition}
+
+\begin{definition}[balanced_univ]
+A theorem defining \texttt{balanced_univ}
+\end{definition}
+
+\begin{definition}[Balanced]
+A theorem defining \texttt{Balanced}
+\end{definition}
+
+\begin{definition}[Balanced]
+A theorem defining \texttt{Balanced}
+\end{definition}
+
+\begin{definition}[balanced_iUnion]
+A theorem defining \texttt{balanced_iUnion}
+\end{definition}
+
+\section{Main Theorems}
+\begin{theorem}[Balanced]
+Scalar multiplication (by possibly different types) of a balanced set is monotone.
+\end{theorem}
+
+\begin{theorem}[Balanced]
+A balanced set absorbs itself.
+\end{theorem}
+
+\begin{theorem}[absorbent_nhds_zero]
+Every neighbourhood of the origin is absorbent.
+\end{theorem}
+
+\begin{theorem}[Balanced]
+The union of `{0}` with the interior of a balanced set is balanced.
+\end{theorem}
+
+
+\end{document}

@@ -1,0 +1,127 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+
+\title{Analysis Module: FourierTransform}
+\author{Mathlib4 Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Overview}
+\subsection{\1}
+
+We set up the Fourier transform for complex-valued functions on finite-dimensional spaces.
+
+#\subsection{\1}
+
+In namespace \texttt{\1}, we define the Fourier integral in the following context:
+* \texttt{\1} is a commutative ring.
+* \texttt{\1} and \texttt{\1} are \texttt{\1}-modules.
+* \texttt{\1} is a unitary additive character of \texttt{\1}, i.e. an \texttt{\1}.
+* \texttt{\1} is a measure on \texttt{\1}.
+* \texttt{\1} is a \texttt{\1}-bilinear form \texttt{\1}.
+* \texttt{\1} is a complete normed \texttt{\1}-vector space.
+
+With these definitions, we define \texttt{\1} to be the map from functions \texttt{\1} to
+functions \texttt{\1} that sends \texttt{\1} to
+
+\texttt{\1},
+
+This includes the cases \texttt{\1} is the dual of \texttt{\1} and \texttt{\1} is the canonical pairing, or \texttt{\1} and \texttt{\1}
+is a bilinear form (e.g. an inner product).
+
+In namespace \texttt{\1}, we consider the more familiar special case when \texttt{\1} and \texttt{\1} is the
+multiplication map (but still allowing \texttt{\1} to be an arbitrary ring equipped with a measure).
+
+The most familiar case of all is when \texttt{\1}, \texttt{\1} is multiplication, \texttt{\1} is volume, and
+\texttt{\1} is \texttt{\1}, i.e. the character \texttt{\1} (for which we
+introduced the notation \texttt{\1} in the scope \texttt{\1}).
+
+Another familiar case (which generalizes the previous one) is when \texttt{\1} is an inner product space
+over \texttt{\1} and \texttt{\1} is the scalar product. We introduce two notations \texttt{\1} for the Fourier transform in
+this case and \texttt{\1} for the inverse Fourier transform. These notations make
+in particular sense for \texttt{\1}.
+
+#\subsection{\1}
+
+At present the only nontrivial lemma we prove is \texttt{\1}, stating that the
+Fourier transform of an integrable function is continuous (under mild assumptions).
+
+\section{Key Definitions}
+\begin{definition}[fourierIntegral]
+A def defining \texttt{fourierIntegral}
+\end{definition}
+
+\begin{definition}[fourierIntegral_const_smul]
+A theorem defining \texttt{fourierIntegral_const_smul}
+\end{definition}
+
+\begin{definition}[norm_fourierIntegral_le_integral_norm]
+A theorem defining \texttt{norm_fourierIntegral_le_integral_norm}
+\end{definition}
+
+\begin{definition}[fourierIntegral_comp_add_right]
+A theorem defining \texttt{fourierIntegral_comp_add_right}
+\end{definition}
+
+\begin{definition}[fourierIntegral_convergent_iff]
+A theorem defining \texttt{fourierIntegral_convergent_iff}
+\end{definition}
+
+\begin{definition}[fourierIntegral_add]
+A theorem defining \texttt{fourierIntegral_add}
+\end{definition}
+
+\begin{definition}[fourierIntegral_continuous]
+A theorem defining \texttt{fourierIntegral_continuous}
+\end{definition}
+
+\begin{definition}[integral_bilin_fourierIntegral_eq_flip]
+A theorem defining \texttt{integral_bilin_fourierIntegral_eq_flip}
+\end{definition}
+
+\begin{definition}[integral_fourierIntegral_smul_eq_flip]
+A theorem defining \texttt{integral_fourierIntegral_smul_eq_flip}
+\end{definition}
+
+\begin{definition}[fourierIntegral_probChar]
+A lemma defining \texttt{fourierIntegral_probChar}
+\end{definition}
+
+\section{Main Theorems}
+\begin{theorem}[norm_fourierIntegral_le_integral_norm]
+The uniform norm of the Fourier integral of `f` is bounded by the `L¹` norm of `f`.
+\end{theorem}
+
+\begin{theorem}[fourierIntegral_comp_add_right]
+The Fourier integral converts right-translation into scalar multiplication by a phase factor.
+\end{theorem}
+
+\begin{theorem}[fourierIntegral_convergent_iff]
+For any `w`, the Fourier integral is convergent iff `f` is integrable.
+\end{theorem}
+
+\begin{theorem}[fourierIntegral_continuous]
+The Fourier integral of an `L^1` function is a continuous function.
+\end{theorem}
+
+\begin{theorem}[integral_fourierIntegral_smul_eq_flip]
+The Fourier transform satisfies `\int \mathcal{F} f * g = \int f * \mathcal{F} g`, i.e., it is self-adjoint.
+\end{theorem}
+
+\begin{theorem}[norm_fourierIntegral_le_integral_norm]
+The uniform norm of the Fourier transform of `f` is bounded by the `L¹` norm of `f`.
+\end{theorem}
+
+
+\end{document}

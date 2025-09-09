@@ -1,0 +1,105 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+
+\title{Analysis Module: Basic}
+\author{Mathlib4 Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Overview}
+\subsection{Gradient}
+
+\subsubsection{Main Definitions}
+
+Let \\texttt{f} be a function from a Hilbert Space \\texttt{F} to \\texttt{\mathbb{K}} (\\texttt{\mathbb{K}} is \\texttt{\mathbb{R}} or \\texttt{\mathbb{C}}), \\texttt{x} be a point in \\texttt{F}
+and \\texttt{f'} be a vector in F. Then
+
+  \\texttt{HasGradientWithinAt f f' s x}
+
+says that \\texttt{f} has a gradient \\texttt{f'} at \\texttt{x}, where the domain of interest
+is restricted to \\texttt{s}. We also have
+
+  \\texttt{HasGradientAt f f' x := HasGradientWithinAt f f' x univ}
+
+\subsubsection{Main results}
+
+This file contains the following parts of gradient.
+* the definition of gradient.
+* the theorems translating between \\texttt{HasGradientAtFilter} and \\texttt{HasFDerivAtFilter},
+  \\texttt{HasGradientWithinAt} and \\texttt{HasFDerivWithinAt}, \\texttt{HasGradientAt} and \\texttt{HasFDerivAt},
+  \\texttt{Gradient} and \\texttt{fderiv}.
+* theorems the Uniqueness of Gradient.
+* the theorems translating between  \\texttt{HasGradientAtFilter} and \\texttt{HasDerivAtFilter},
+  \\texttt{HasGradientAt} and \\texttt{HasDerivAt}, \\texttt{Gradient} and \\texttt{deriv} when \\texttt{F = \mathbb{K}}.
+* the theorems about the congruence of the gradient.
+* the theorems about the gradient of constant function.
+* the theorems about the continuity of a function admitting a gradient.
+
+\section{Key Definitions}
+\begin{definition}[HasGradientAtFilter]
+A def defining \texttt{HasGradientAtFilter}
+\end{definition}
+
+\begin{definition}[HasGradientWithinAt]
+A def defining \texttt{HasGradientWithinAt}
+\end{definition}
+
+\begin{definition}[HasGradientAt]
+A def defining \texttt{HasGradientAt}
+\end{definition}
+
+\begin{definition}[gradientWithin]
+A def defining \texttt{gradientWithin}
+\end{definition}
+
+\begin{definition}[gradient]
+A def defining \texttt{gradient}
+\end{definition}
+
+\begin{definition}[hasGradientWithinAt_iff_hasFDerivWithinAt]
+A theorem defining \texttt{hasGradientWithinAt_iff_hasFDerivWithinAt}
+\end{definition}
+
+\begin{definition}[hasFDerivWithinAt_iff_hasGradientWithinAt]
+A theorem defining \texttt{hasFDerivWithinAt_iff_hasGradientWithinAt}
+\end{definition}
+
+\begin{definition}[hasGradientAt_iff_hasFDerivAt]
+A theorem defining \texttt{hasGradientAt_iff_hasFDerivAt}
+\end{definition}
+
+\begin{definition}[hasFDerivAt_iff_hasGradientAt]
+A theorem defining \texttt{hasFDerivAt_iff_hasGradientAt}
+\end{definition}
+
+\begin{definition}[gradient_eq_zero_of_not_differentiableAt]
+A theorem defining \texttt{gradient_eq_zero_of_not_differentiableAt}
+\end{definition}
+
+\section{Derivatives}
+This module deals with derivatives of functions $f : \mathbb{K} \to F$ where:
+\begin{itemize}
+\item $\mathbb{K}$ is a normed field
+\item $F$ is a normed space over $\mathbb{K}$
+\end{itemize}
+
+\subsection{Notations}
+\begin{itemize}
+\item $\text{deriv } f$ denotes the derivative of $f$
+\item $\text{HasDerivAt } f \, f' \, x$ means $f'(x) = f'$
+\item $\text{derivWithin } f \, s \, x$ is the derivative within set $s$
+\end{itemize}
+
+
+\end{document}

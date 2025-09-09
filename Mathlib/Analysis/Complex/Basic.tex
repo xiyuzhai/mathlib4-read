@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+
+\title{Analysis Module: Basic}
+\author{Mathlib4 Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Overview}
+\subsection{\1}
+
+This file gathers basic facts of analytic nature on the complex numbers.
+
+#\subsection{\1}
+
+This file registers \texttt{\1} as a normed field, expresses basic properties of the norm, and gives tools
+on the real vector space structure of \texttt{\1}. Notably, it defines the following functions in the
+namespace \texttt{\1}.
+
+|Name              |Type         |Description                                             |
+|------------------|-------------|--------------------------------------------------------|
+|\texttt{\1}|\mathbb{C} ≃L[\mathbb{R}] \mathbb{R} \times \mathbb{R}|The natural \texttt{\1} from \texttt{\1} to \texttt{\1} |
+|\texttt{\1}           |\mathbb{C} \toL[\mathbb{R}] \mathbb{R}    |Real part function as a \texttt{\1}           |
+|\texttt{\1}           |\mathbb{C} \toL[\mathbb{R}] \mathbb{R}    |Imaginary part function as a \texttt{\1}      |
+|\texttt{\1}       |\mathbb{R} \toL[\mathbb{R}] \mathbb{C}    |Embedding of the reals as a \texttt{\1}       |
+|\texttt{\1}        |\mathbb{R} \toₗᵢ[\mathbb{R}] \mathbb{C}   |Embedding of the reals as a \texttt{\1}            |
+|\texttt{\1}         |\mathbb{C} ≃L[\mathbb{R}] \mathbb{C}    |Complex conjugation as a \texttt{\1}        |
+|\texttt{\1}         |\mathbb{C} ≃ₗᵢ[\mathbb{R}] \mathbb{C}   |Complex conjugation as a \texttt{\1}          |
+
+We also register the fact that \texttt{\1} is an \texttt{\1} field.
+
+\section{Key Definitions}
+\begin{definition}[continuous_normSq]
+A theorem defining \texttt{continuous_normSq}
+\end{definition}
+
+\begin{definition}[nnnorm_eq_one_of_pow_eq_one]
+A theorem defining \texttt{nnnorm_eq_one_of_pow_eq_one}
+\end{definition}
+
+\begin{definition}[norm_eq_one_of_pow_eq_one]
+A theorem defining \texttt{norm_eq_one_of_pow_eq_one}
+\end{definition}
+
+\begin{definition}[le_of_eq_sum_of_eq_sum_norm]
+A lemma defining \texttt{le_of_eq_sum_of_eq_sum_norm}
+\end{definition}
+
+\begin{definition}[equivRealProd_apply_le]
+A theorem defining \texttt{equivRealProd_apply_le}
+\end{definition}
+
+\begin{definition}[equivRealProd_apply_le]
+A theorem defining \texttt{equivRealProd_apply_le}
+\end{definition}
+
+\begin{definition}[lipschitz_equivRealProd]
+A theorem defining \texttt{lipschitz_equivRealProd}
+\end{definition}
+
+\begin{definition}[antilipschitz_equivRealProd]
+A theorem defining \texttt{antilipschitz_equivRealProd}
+\end{definition}
+
+\begin{definition}[isUniformEmbedding_equivRealProd]
+A theorem defining \texttt{isUniformEmbedding_equivRealProd}
+\end{definition}
+
+\begin{definition}[equivRealProdCLM]
+A def defining \texttt{equivRealProdCLM}
+\end{definition}
+
+\section{Main Theorems}
+\begin{theorem}[tendsto_normSq_cocompact_atTop]
+The `normSq` function on `\mathbb{C}` is proper.
+\end{theorem}
+
+\begin{theorem}[ringHom_eq_ofReal_of_continuous]
+The only continuous ring homomorphism from `\mathbb{R}` to `\mathbb{C}` is the identity.
+\end{theorem}
+
+\begin{theorem}[ball_one_subset_slitPlane]
+The slit plane includes the open unit ball of radius `1` around `1`.
+\end{theorem}
+
+\begin{theorem}[mem_slitPlane_of_norm_lt_one]
+The slit plane includes the open unit ball of radius `1` around `1`.
+\end{theorem}
+
+
+\end{document}

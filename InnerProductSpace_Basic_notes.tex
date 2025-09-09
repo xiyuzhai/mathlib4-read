@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{example}{Example}
+
+\title{Analysis Module: Basic}
+\author{Mathlib4 Documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Module Overview}
+\subsection{\1}
+
+This file proves many basic properties of inner product spaces (real or complex).
+
+#\subsection{\1}
+
+- \texttt{\1}: the Cauchy-Schwartz inequality (one of many variants).
+- \texttt{\1}: the equality criteion in the Cauchy-Schwartz inequality (also in many
+  variants).
+- \texttt{\1}: the polarization identity.
+
+#\subsection{\1}
+
+inner product space, Hilbert space, norm
+
+\section{Key Definitions}
+\begin{definition}[inner_conj_symm]
+A theorem defining \texttt{inner_conj_symm}
+\end{definition}
+
+\begin{definition}[real_inner_comm]
+A theorem defining \texttt{real_inner_comm}
+\end{definition}
+
+\begin{definition}[inner_eq_zero_symm]
+A theorem defining \texttt{inner_eq_zero_symm}
+\end{definition}
+
+\begin{definition}[inner_self_im]
+A theorem defining \texttt{inner_self_im}
+\end{definition}
+
+\begin{definition}[inner_add_left]
+A theorem defining \texttt{inner_add_left}
+\end{definition}
+
+\begin{definition}[inner_add_right]
+A theorem defining \texttt{inner_add_right}
+\end{definition}
+
+\begin{definition}[inner_re_symm]
+A theorem defining \texttt{inner_re_symm}
+\end{definition}
+
+\begin{definition}[inner_im_symm]
+A theorem defining \texttt{inner_im_symm}
+\end{definition}
+
+\begin{definition}[inner_smul_left_eq_star_smul]
+A lemma defining \texttt{inner_smul_left_eq_star_smul}
+\end{definition}
+
+\begin{definition}[inner_smul_left_eq_smul]
+A lemma defining \texttt{inner_smul_left_eq_smul}
+\end{definition}
+
+\section{Main Theorems}
+\begin{theorem}[inner_smul_left_eq_star_smul]
+See `inner_smul_left` for the common special when `\mathbb{K} = 𝕝`.
+\end{theorem}
+
+\begin{theorem}[inner_smul_right_eq_smul]
+See `inner_smul_right` for the common special when `\mathbb{K} = 𝕝`.
+\end{theorem}
+
+\begin{theorem}[inner_smul_left]
+See `inner_smul_left_eq_star_smul` for the case of a general algebra action.
+\end{theorem}
+
+\begin{theorem}[inner_smul_right]
+See `inner_smul_right_eq_smul` for the case of a general algebra action.
+\end{theorem}
+
+\begin{theorem}[sum_inner]
+An inner product with a sum on the left.
+\end{theorem}
+
+\begin{theorem}[inner_sum]
+An inner product with a sum on the right.
+\end{theorem}
+
+\begin{theorem}[inner_add_add_self]
+Expand `⟪x + y, x + y⟫`
+\end{theorem}
+
+\begin{theorem}[real_inner_add_add_self]
+Expand `⟪x + y, x + y⟫_\mathbb{R}`
+\end{theorem}
+
+\begin{theorem}[real_inner_sub_sub_self]
+Expand `⟪x - y, x - y⟫_\mathbb{R}`
+\end{theorem}
+
+\begin{theorem}[parallelogram_law]
+Parallelogram law
+\end{theorem}
+
+
+\end{document}
