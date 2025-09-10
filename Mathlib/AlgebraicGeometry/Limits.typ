@@ -4,7 +4,7 @@
 
 = Introduction
 
-This document provides a natural language companion to the `Limits.lean* file in Mathlib4. The file constructs various limits and colimits in the category of schemes, establishing fundamental categorical properties that are essential for the theory of schemes. These constructions generalize classical geometric operations like taking products, fiber products, and disjoint unions to the scheme-theoretic setting.
+This document provides a natural language companion to the `Limits.lean` file in Mathlib4. The file constructs various limits and colimits in the category of schemes, establishing fundamental categorical properties that are essential for the theory of schemes. These constructions generalize classical geometric operations like taking products, fiber products, and disjoint unions to the scheme-theoretic setting.
 
 The existence of limits and colimits in the category of schemes is crucial for many geometric constructions and provides the categorical foundation for advanced topics in algebraic geometry. The constructions are built on the fundamental relationship between schemes and commutative rings through the Spec functor, which reverses the direction of morphisms and transforms colimits in rings to limits in schemes.
 
@@ -18,11 +18,11 @@ noncomputable def specZIsTerminal : IsTerminal Spec(ℤ) :=
     (terminalOpOfInitial CommRingCat.zIsInitial)
 ```
 
-*Mathematical Significance:* The scheme $\mathrm{Spec}(\mathbb{Z})$ is the terminal object in the category of schemes. This means that for every scheme $X$, there exists a unique morphism $X \to \mathrm{Spec}(\mathbb{Z})$.
+*Mathematical Significance:* The scheme $"Spec"(ZZ)$ is the terminal object in the category of schemes. This means that for every scheme $X$, there exists a unique morphism $X -> "Spec"(ZZ)$.
 
-Geometrically, this reflects the fundamental role of $\mathbb{Z*$ as the "initial ring" - every ring has a unique ring homomorphism from $\mathbb{Z}$ (determined by where $1$ maps), and by the contravariant nature of the Spec functor, this becomes a morphism into every scheme from $\mathrm{Spec}(\mathbb{Z})$.
+Geometrically, this reflects the fundamental role of $ZZ$ as the "initial ring" - every ring has a unique ring homomorphism from $ZZ$ (determined by where $1$ maps), and by the contravariant nature of the Spec functor, this becomes a morphism into every scheme from $"Spec"(ZZ)$.
 
-The terminal property captures the idea that $\mathrm{Spec*(\mathbb{Z})$ is the "universal base scheme" over which all schemes can be considered.
+The terminal property captures the idea that $"Spec"(ZZ)$ is the "universal base scheme" over which all schemes can be considered.
 
 == Finite Limits
 
@@ -34,9 +34,9 @@ instance : HasFiniteLimits Scheme :=
 *Mathematical Significance:* The category of schemes has all finite limits. This follows from the general categorical theorem that a category with terminal objects and fiber products (pullbacks) automatically has all finite limits.
 
 This result is fundamental because it ensures that many classical geometric constructions have scheme-theoretic generalizations:
-\item Products of schemes exist
-\item Fiber products (the scheme-theoretic intersection) exist
-\item Equalizers and other finite limit constructions are available
+- Products of schemes exist
+- Fiber products (the scheme-theoretic intersection) exist
+- Equalizers and other finite limit constructions are available
 
 = Initial Objects and Empty Schemes
 
@@ -49,7 +49,7 @@ def Scheme.emptyTo (X : Scheme.{u}) : ∅ ⟶ X :=
       c := { app := fun _ => CommRingCat.punitIsTerminal.from _ } }, fun x => PEmpty.elim x⟩
 ```
 
-*Mathematical Significance:* The empty scheme $\emptyset$ has a unique morphism to every scheme $X$. This is the scheme-theoretic version of the empty set, and its morphisms are defined by the fact that there are no points to map, making the morphism trivially well-defined.
+*Mathematical Significance:* The empty scheme $emptyset$ has a unique morphism to every scheme $X$. This is the scheme-theoretic version of the empty set, and its morphisms are defined by the fact that there are no points to map, making the morphism trivially well-defined.
 
 == Initial Property
 
@@ -58,7 +58,7 @@ def emptyIsInitial : IsInitial (∅ : Scheme.{u}) :=
   IsInitial.ofUnique _
 ```
 
-*Mathematical Significance:* The empty scheme is the initial object in the category of schemes. This means that for every scheme $X$, there exists a unique morphism $\emptyset \to X$.
+*Mathematical Significance:* The empty scheme is the initial object in the category of schemes. This means that for every scheme $X$, there exists a unique morphism $emptyset -> X$.
 
 The initial property reflects the fact that the empty scheme has no geometric content and can be "included" into any other scheme in a canonical way. This is the scheme-theoretic generalization of the fact that the empty set can be included into any set.
 
@@ -84,7 +84,7 @@ def sigmaMk : (Σ i, f i) ≃ₜ (∐ f :) :=
     (PreservesCoproduct.iso Scheme.forgetToTop f).symm)
 ```
 
-*Mathematical Significance:* The underlying topological space of the coproduct of schemes $\coprod_i X_i$ is homeomorphic to the disjoint union $\bigsqcup_i X_i$ as topological spaces. This establishes that the scheme-theoretic coproduct has the expected topological behavior.
+*Mathematical Significance:* The underlying topological space of the coproduct of schemes $union.sq_i X_i$ is homeomorphic to the disjoint union $union.sq.big_i X_i$ as topological spaces. This establishes that the scheme-theoretic coproduct has the expected topological behavior.
 
 == Disjoint Images
 
@@ -126,7 +126,7 @@ def coprodIsoSigma : X ⨿ Y ≅ ∐ fun i : ULift.{u} WalkingPair ↦ i.1.cases
   Sigma.whiskerEquiv Equiv.ulift.symm (fun _ ↦ by exact Iso.refl _)
 ```
 
-*Mathematical Significance:* The binary coproduct $X \sqcup Y$ is isomorphic to the general coproduct indexed by a two-element set. This shows that binary and indexed coproducts are essentially the same construction.
+*Mathematical Significance:* The binary coproduct $X union.sq Y$ is isomorphic to the general coproduct indexed by a two-element set. This shows that binary and indexed coproducts are essentially the same construction.
 
 == Open Immersion Property
 
@@ -138,7 +138,7 @@ instance : IsOpenImmersion (coprod.inr : Y ⟶ X ⨿ Y) := by
   rw [← ι_right_coprodIsoSigma_inv]; infer_instance
 ```
 
-*Mathematical Significance:* The canonical inclusions of $X$ and $Y$ into their coproduct $X \sqcup Y$ are open immersions. This means that both $X$ and $Y$ appear as open subschemes of their coproduct, which is the expected geometric behavior.
+*Mathematical Significance:* The canonical inclusions of $X$ and $Y$ into their coproduct $X union.sq Y$ are open immersions. This means that both $X$ and $Y$ appear as open subschemes of their coproduct, which is the expected geometric behavior.
 
 == Complementary Structure
 
@@ -150,7 +150,7 @@ lemma isCompl_range_inl_inr :
     ⟨mapIsColimitOfPreservesOfIsColimit Scheme.forgetToTop.{u} _ _ (coprodIsCoprod X Y)⟩).2.2
 ```
 
-*Mathematical Significance:* The images of $X$ and $Y$ in their coproduct $X \sqcup Y$ form complementary subsets - they are disjoint and their union is the entire space. This confirms that the coproduct is indeed a disjoint union where every point comes from exactly one of the two components.
+*Mathematical Significance:* The images of $X$ and $Y$ in their coproduct $X union.sq Y$ form complementary subsets - they are disjoint and their union is the entire space. This confirms that the coproduct is indeed a disjoint union where every point comes from exactly one of the two components.
 
 = Affine Coproducts
 
@@ -163,9 +163,9 @@ def coprodSpec : Spec(R) ⨿ Spec(S) ⟶ Spec(R × S) :=
     (Spec.map (CommRingCat.ofHom <| RingHom.snd _ _))
 ```
 
-*Mathematical Significance:* The coproduct of two affine schemes $\mathrm{Spec}(R) \sqcup \mathrm{Spec}(S)$ is canonically isomorphic to $\mathrm{Spec}(R \times S)$. This establishes the fundamental relationship between coproducts in schemes and products in rings.
+*Mathematical Significance:* The coproduct of two affine schemes $"Spec"(R) union.sq "Spec"(S)$ is canonically isomorphic to $"Spec"(R times S)$. This establishes the fundamental relationship between coproducts in schemes and products in rings.
 
-The construction uses the fact that the Spec functor reverses the direction of morphisms, so the product ring $R \times S$ with its projection maps corresponds to the coproduct of the corresponding spectra.
+The construction uses the fact that the Spec functor reverses the direction of morphisms, so the product ring $R times S$ with its projection maps corresponds to the coproduct of the corresponding spectra.
 
 == Isomorphism Property
 
@@ -175,7 +175,7 @@ instance : IsIso (coprodSpec R S) := by
   refine ⟨?_, isIso_stalkMap_coprodSpec R S⟩
 ```
 
-*Mathematical Significance:* The canonical morphism $\mathrm{Spec}(R) \sqcup \mathrm{Spec}(S) \to \mathrm{Spec}(R \times S)$ is an isomorphism. This can be verified by checking that it induces isomorphisms on all stalks and is a homeomorphism on the underlying topological spaces.
+*Mathematical Significance:* The canonical morphism $"Spec"(R) union.sq "Spec"(S) -> "Spec"(R times S)$ is an isomorphism. This can be verified by checking that it induces isomorphisms on all stalks and is a homeomorphism on the underlying topological spaces.
 
 This result establishes the fundamental correspondence between coproducts of affine schemes and products of rings, which is one of the key examples of how the Spec functor transforms colimits in rings into limits in schemes.
 
@@ -190,7 +190,7 @@ instance : PreservesColimitsOfShape (Discrete WalkingPair) Scheme.Spec.{u} :=
     preservesColimit_of_iso_diagram _ (diagramIsoPair _).symm⟩
 ```
 
-*Mathematical Significance:* The Spec functor preserves binary coproducts. This means that $\mathrm{Spec}(R \times S) \cong \mathrm{Spec}(R) \sqcup \mathrm{Spec}(S)$, establishing the fundamental duality between products in rings and coproducts in schemes.
+*Mathematical Significance:* The Spec functor preserves binary coproducts. This means that $"Spec"(R times S) tilde.eq "Spec"(R) union.sq "Spec"(S)$, establishing the fundamental duality between products in rings and coproducts in schemes.
 
 == Finite Coproduct Preservation
 
@@ -199,7 +199,7 @@ instance {J : Type*} [Finite J] : PreservesColimitsOfShape (Discrete J) Scheme.S
   preservesFiniteCoproductsOfPreservesBinaryAndInitial _ _
 ```
 
-*Mathematical Significance:* The Spec functor preserves all finite coproducts. This extends the binary case to arbitrary finite collections, showing that $\mathrm{Spec}(\prod_i R_i) \cong \coprod_i \mathrm{Spec}(R_i)$ for finite index sets.
+*Mathematical Significance:* The Spec functor preserves all finite coproducts. This extends the binary case to arbitrary finite collections, showing that $"Spec"(product_i R_i) tilde.eq union.sq_i "Spec"(R_i)$ for finite index sets.
 
 This preservation property is fundamental for understanding how algebraic constructions (products of rings) translate to geometric constructions (coproducts of schemes).
 
@@ -227,7 +227,7 @@ lemma nonempty_isColimit_binaryCofanMk_of_isCompl {X Y S : Scheme.{u}}
     Nonempty (IsColimit <| BinaryCofan.mk f g) := by
 ```
 
-*Mathematical Significance:* If a scheme $S$ is the disjoint union of two open subschemes isomorphic to $X$ and $Y$ respectively (i.e., their images are complementary), then $S$ is the coproduct $X \sqcup Y$.
+*Mathematical Significance:* If a scheme $S$ is the disjoint union of two open subschemes isomorphic to $X$ and $Y$ respectively (i.e., their images are complementary), then $S$ is the coproduct $X union.sq Y$.
 
 This provides the binary version of the general characterization and is particularly useful for understanding when schemes decompose as binary coproducts.
 
@@ -241,7 +241,7 @@ def sigmaSpec (R : ι → CommRingCat) : (∐ fun i ↦ Spec (R i)) ⟶ Spec(Π 
   Sigma.desc (fun i ↦ Spec.map (CommRingCat.ofHom (Pi.evalRingHom _ i)))
 ```
 
-*Mathematical Significance:* For an arbitrary family of rings $(R_i)_{i \in I}$, there is a canonical morphism from the coproduct of their spectra to the spectrum of their product. When the index set is finite, this morphism is an isomorphism.
+*Mathematical Significance:* For an arbitrary family of rings $(R_i)_(i in I)$, there is a canonical morphism from the coproduct of their spectra to the spectrum of their product. When the index set is finite, this morphism is an isomorphism.
 
 == Open Immersion Structure
 
@@ -253,7 +253,7 @@ instance (R : ι → CommRingCat.{u}) : IsOpenImmersion (sigmaSpec R) := by
   refine Set.disjoint_iff_forall_ne.mpr ?_
 ```
 
-*Mathematical Significance:* The canonical morphism from the coproduct of spectra to the spectrum of the product is always an open immersion, even when the index set is infinite. This means that $\coprod_i \mathrm{Spec}(R_i)$ always embeds as an open subscheme of $\mathrm{Spec}(\prod_i R_i)$.
+*Mathematical Significance:* The canonical morphism from the coproduct of spectra to the spectrum of the product is always an open immersion, even when the index set is infinite. This means that $union.sq_i "Spec"(R_i)$ always embeds as an open subscheme of $"Spec"(product_i R_i)$.
 
 When the index set is finite, this open immersion is actually an isomorphism, but for infinite index sets, the morphism is typically not surjective.
 
@@ -263,24 +263,24 @@ The limit and colimit constructions developed in this file provide the categoric
 
 == Classical Interpretations
 
-\item *Terminal Object*: $\mathrm{Spec}(\mathbb{Z})$ serves as the universal base scheme, generalizing the notion of the "ground field" in classical algebraic geometry.
+- *Terminal Object*: $"Spec"(ZZ)$ serves as the universal base scheme, generalizing the notion of the "ground field" in classical algebraic geometry.
 
-\item *Empty Scheme*: The initial object provides the scheme-theoretic version of the empty set, essential for describing "nowhere defined" constructions.
+- *Empty Scheme*: The initial object provides the scheme-theoretic version of the empty set, essential for describing "nowhere defined" constructions.
 
-\item *Disjoint Unions*: Coproducts generalize the classical notion of taking disjoint unions of varieties, providing a systematic way to combine geometric objects.
+- *Disjoint Unions*: Coproducts generalize the classical notion of taking disjoint unions of varieties, providing a systematic way to combine geometric objects.
 
-\item *Products vs. Coproducts*: The reversal of products and coproducts by the Spec functor reflects the contravariant relationship between algebra and geometry.
+- *Products vs. Coproducts*: The reversal of products and coproducts by the Spec functor reflects the contravariant relationship between algebra and geometry.
 
 == Applications
 
 These constructions enable many advanced topics in algebraic geometry:
 
-\item *Fiber Products*: Combined with the terminal object, finite limits provide fiber products, essential for intersection theory.
+- *Fiber Products*: Combined with the terminal object, finite limits provide fiber products, essential for intersection theory.
 
-\item *Base Change*: The limit constructions provide the foundation for base change operations.
+- *Base Change*: The limit constructions provide the foundation for base change operations.
 
-\item *Moduli Problems*: Coproducts and limits are essential for constructing moduli spaces and parameter spaces.
+- *Moduli Problems*: Coproducts and limits are essential for constructing moduli spaces and parameter spaces.
 
-\item *Descent Theory*: The categorical properties established here are fundamental for descent theory and stack constructions.
+- *Descent Theory*: The categorical properties established here are fundamental for descent theory and stack constructions.
 
 The systematic development of limits and colimits thus provides both the theoretical foundation and practical tools needed for advanced algebraic geometry in the Mathlib4 framework.

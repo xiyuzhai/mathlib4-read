@@ -1,19 +1,27 @@
-#set text(font: "New Computer Modern", size: 11pt)
-#set page(margin: 1in)
+#set document(title: "Ideal Sheaf (Deprecated)")
 #set heading(numbering: "1.")
 
-= Source Code
+= Ideal Sheaf (Deprecated)
 
-The following is the Lean 4 source code from `IdealSheaf.lean*:
+== Overview
 
+This module has been deprecated since 2025-04-13.
+
+== Deprecation Notice
+
+The functionality previously in `IdealSheaf.lean` has been moved to:
+- `Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme`
+
+Users should import the new module directly.
+
+== Migration
+
+Replace imports of:
 ```lean
-/-
-Copyright (c) 2025 Andrew Yang. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Andrew Yang
--/
+import Mathlib.AlgebraicGeometry.IdealSheaf
+```
+
+With:
+```lean
 import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
-
-deprecated_module (since := "2025-04-13")
-
 ```

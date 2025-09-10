@@ -1,10 +1,10 @@
 #set text(font: "New Computer Modern", size: 11pt)
-#set page(margin: 1in)
+#set page(margin: 1in)  
 #set heading(numbering: "1.")
 
 = Introduction
 
-This document provides a natural language companion to the `Spec.lean* file in Mathlib4. The file defines the spectrum functor $\mathrm{Spec}$ from commutative rings to locally ringed spaces, which is fundamental to algebraic geometry. The construction proceeds in three stages, building up structure incrementally: first as topological spaces, then as sheafed spaces, and finally as locally ringed spaces.
+This document provides a natural language companion to the `Spec.lean` file in Mathlib4. The file defines the spectrum functor $"Spec"$ from commutative rings to locally ringed spaces, which is fundamental to algebraic geometry. The construction proceeds in three stages, building up structure incrementally: first as topological spaces, then as sheafed spaces, and finally as locally ringed spaces.
 
 The spectrum construction is the bridge between algebra and geometry, allowing us to translate problems about rings into geometric problems about spaces and vice versa.
 
@@ -12,9 +12,9 @@ The spectrum construction is the bridge between algebra and geometry, allowing u
 
 The Spec functor is defined in three consecutive steps, each with more structure:
 
-\item $\mathrm{Spec.toTop*$: from rings to topological spaces
-\item $\mathrm{Spec.toSheafedSpace*$: from rings to sheafed spaces
-\item $\mathrm{Spec.toLocallyRingedSpace*$: from rings to locally ringed spaces
+- $"Spec.toTop"$: from rings to topological spaces
+- $"Spec.toSheafedSpace"$: from rings to sheafed spaces  
+- $"Spec.toLocallyRingedSpace"$: from rings to locally ringed spaces
 
 This layered approach makes the construction more manageable and allows for reuse of the intermediate stages.
 
@@ -27,7 +27,7 @@ def Spec.topObj (R : CommRingCat.{u}) : TopCat :=
   TopCat.of (PrimeSpectrum R)
 ```
 
-*Natural Language:* The spectrum of a commutative ring $R$ as a topological space is simply the prime spectrum $\mathrm{Spec}(R)$, consisting of all prime ideals of $R$ equipped with the Zariski topology.
+*Natural Language:* The spectrum of a commutative ring $R$ as a topological space is simply the prime spectrum $"Spec"(R)$, consisting of all prime ideals of $R$ equipped with the Zariski topology.
 
 == Morphisms
 
@@ -36,7 +36,7 @@ def Spec.topMap {R S : CommRingCat.{u}} (f : R ⟶ S) : Spec.topObj S ⟶ Spec.t
   TopCat.ofHom (PrimeSpectrum.comap f.hom)
 ```
 
-*Natural Language:* A ring homomorphism $f: R \to S$ induces a continuous map $\mathrm{Spec}(S) \to \mathrm{Spec}(R)$ by taking the preimage of prime ideals. Note the contravariant nature: morphisms of rings induce morphisms in the opposite direction on spectra.
+*Natural Language:* A ring homomorphism $f: R -> S$ induces a continuous map $"Spec"(S) -> "Spec"(R)$ by taking the preimage of prime ideals. Note the contravariant nature: morphisms of rings induce morphisms in the opposite direction on spectra.
 
 == Functoriality
 
@@ -57,7 +57,7 @@ def Spec.toTop : CommRingCat.{u}ᵒᵖ ⥤ TopCat where
   map {_ _} f := Spec.topMap f.unop
 ```
 
-*Natural Language:* By working in the opposite category of rings, we can present Spec as a covariant functor from $\mathbf{CRing}^{op}$ to $\mathbf{Top}$.
+*Natural Language:* By working in the opposite category of rings, we can present Spec as a covariant functor from $bold("CRing")^("op")$ to $bold("Top")$.
 
 = Sheafed Space Level
 
@@ -84,7 +84,7 @@ def Spec.sheafedSpaceMap {R S : CommRingCat.{u}} (f : R ⟶ S) :
       naturality := fun {_ _} _ => by ext; rfl }
 ```
 
-*Natural Language:* A ring homomorphism $f: R \to S$ induces a morphism of sheafed spaces. The underlying map is the topological map defined earlier, and the sheaf morphism is given by the comap construction, which provides the appropriate maps between structure sheaves.
+*Natural Language:* A ring homomorphism $f: R -> S$ induces a morphism of sheafed spaces. The underlying map is the topological map defined earlier, and the sheaf morphism is given by the comap construction, which provides the appropriate maps between structure sheaves.
 
 == Functoriality Properties
 
@@ -168,7 +168,7 @@ def Spec.toLocallyRingedSpace : CommRingCat.{u}ᵒᵖ ⥤ LocallyRingedSpace whe
 
 *Natural Language:* This is the main result: a contravariant functor from commutative rings to locally ringed spaces. This functor is the foundation for defining schemes.
 
-= The Spec-$\Gamma$ Relationship
+= The Spec-$Gamma$ Relationship
 
 == Natural Transformation to Global Sections
 
@@ -179,7 +179,7 @@ def toSpecΓ (R : CommRingCat.{u}) : R ⟶ Γ.obj (op (Spec.toLocallyRingedSpace
 instance isIso_toSpecΓ (R : CommRingCat.{u}) : IsIso (toSpecΓ R)
 ```
 
-*Natural Language:* There is a natural isomorphism between any commutative ring $R$ and the global sections of $\mathrm{Spec}(R)$. This is a fundamental relationship that will be part of the adjunction between $\Gamma$ and $\mathrm{Spec}$.
+*Natural Language:* There is a natural isomorphism between any commutative ring $R$ and the global sections of $"Spec"(R)$. This is a fundamental relationship that will be part of the adjunction between $Gamma$ and $"Spec"$.
 
 == Naturality
 
@@ -199,7 +199,7 @@ def LocallyRingedSpace.SpecΓIdentity : Spec.toLocallyRingedSpace.rightOp ⋙ Γ
       naturality := Spec_Γ_naturality }
 ```
 
-*Natural Language:* The collection of all these natural isomorphisms forms a natural isomorphism between the composite functor $\mathrm{Spec} \circ \Gamma$ and the identity functor. This is one of the triangle identities needed for the adjunction.
+*Natural Language:* The collection of all these natural isomorphisms forms a natural isomorphism between the composite functor $"Spec" compose Gamma$ and the identity functor. This is one of the triangle identities needed for the adjunction.
 
 = Localization Properties
 
@@ -210,7 +210,7 @@ theorem Spec_map_localization_isIso (R : CommRingCat.{u}) (M : Submonoid R)
     [M.IsUnit] : IsIso (Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap R (Localization M))))
 ```
 
-*Natural Language:* When $M$ consists entirely of units in $R$, the localization map $R \to M^{-1}R$ is an isomorphism, and consequently the induced map on spectra is also an isomorphism. This captures the idea that "localizing by units does nothing."
+*Natural Language:* When $M$ consists entirely of units in $R$, the localization map $R -> M^{-1}R$ is an isomorphism, and consequently the induced map on spectra is also an isomorphism. This captures the idea that "localizing by units does nothing."
 
 = Pushforward and Pullback Properties
 
@@ -251,12 +251,12 @@ instance isLocalizedModule_toPushforwardStalkAlgHom :
 
 = Conclusion
 
-The Spec functor construction in this file provides the essential bridge between commutative algebra and algebraic geometry. By building up the structure in stages (topological $\to$ sheafed $\to$ locally ringed spaces), the implementation is both modular and mathematically transparent.
+The Spec functor construction in this file provides the essential bridge between commutative algebra and algebraic geometry. By building up the structure in stages (topological $->$ sheafed $->$ locally ringed spaces), the implementation is both modular and mathematically transparent.
 
 The key insights captured are:
-\item Prime ideals correspond to points in geometric spaces
-\item Ring homomorphisms induce geometric maps in the reverse direction
-\item Local algebraic properties (like being a local ring) have geometric meanings
-\item The spectrum construction preserves and reflects important algebraic information
+- Prime ideals correspond to points in geometric spaces
+- Ring homomorphisms induce geometric maps in the reverse direction
+- Local algebraic properties (like being a local ring) have geometric meanings
+- The spectrum construction preserves and reflects important algebraic information
 
 This foundation enables the definition of schemes and the development of the full theory of algebraic geometry in Mathlib4.

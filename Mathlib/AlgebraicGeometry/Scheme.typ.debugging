@@ -4,7 +4,7 @@
 
 = Introduction
 
-This document provides a natural language companion to the `Scheme.lean` file in Mathlib4. The file defines the fundamental concept of schemes in algebraic geometry, establishing schemes as locally ringed spaces that are locally isomorphic to affine schemes (spectra of commutative rings).
+This document provides a natural language companion to the `Scheme.lean* file in Mathlib4. The file defines the fundamental concept of schemes in algebraic geometry, establishing schemes as locally ringed spaces that are locally isomorphic to affine schemes (spectra of commutative rings).
 
 A scheme is the central object of study in modern algebraic geometry, generalizing both algebraic varieties and the spectrum of a ring. The definition captures the idea that a scheme should "look like" the spectrum of a commutative ring when examined locally.
 
@@ -65,7 +65,7 @@ scoped[AlgebraicGeometry] notation3 "Γ(" X ", " U ")" =>
     (op (α := Scheme.Opens \_) U)
 ```
 
-*Natural Language:* The notation $Gamma(X, U)$ denotes the sections of the structure sheaf of scheme $X$ over the open set $U$. This gives us the "functions" (more precisely, ring elements) defined on the open set $U$.
+*Natural Language:* The notation $\Gamma(X, U)$ denotes the sections of the structure sheaf of scheme $X$ over the open set $U$. This gives us the "functions" (more precisely, ring elements) defined on the open set $U$.
 
 = Basic Properties
 
@@ -97,7 +97,7 @@ abbrev app (U : Y.Opens) : Γ(Y, U) ⟶ Γ(X, f ^{-1}U U) := f.c.app (op U)
 abbrev appTop : Γ(Y, ⊤) ⟶ Γ(X, ⊤) := f.app ⊤
 ```
 
-*Natural Language:* A morphism $f: X -> Y$ induces a map on sections: for any open set $U subset.eq Y$, we get a ring homomorphism $Gamma(Y, U) -> Gamma(X, f^{-1}U)$. The special case of global sections gives us $Gamma(Y, top) -> Gamma(X, top)$.
+*Natural Language:* A morphism $f: X \to Y$ induces a map on sections: for any open set $U \subseteq Y$, we get a ring homomorphism $\Gamma(Y, U) \to \Gamma(X, f^{-1}U)$. The special case of global sections gives us $\Gamma(Y, \top) \to \Gamma(X, \top)$.
 
 == Naturality
 
@@ -115,7 +115,7 @@ def stalkMap (x : X) : Y.presheaf.stalk (f.base x) ⟶ X.presheaf.stalk x :=
   f.toLRSHom.stalkMap x
 ```
 
-*Natural Language:* A morphism $f: X -> Y$ induces local ring homomorphisms between stalks: for each point $x in X$, we get a map from the stalk at $f(x)$ in $Y$ to the stalk at $x$ in $X$.
+*Natural Language:* A morphism $f: X \to Y$ induces local ring homomorphisms between stalks: for each point $x \in X$, we get a map from the stalk at $f(x)$ in $Y$ to the stalk at $x$ in $X$.
 
 = The Spec Construction
 
@@ -127,7 +127,7 @@ def Spec (R : CommRingCat) : Scheme where
   local_affine x := ⟨⟨Set.univ, isOpen_univ⟩, x.2⟩, R, ⟨(Spec.toLocallyRingedSpace.obj (op R)).restrictTopIso⟩⟩
 ```
 
-*Natural Language:* For any commutative ring $R$, we can construct a scheme $"Spec"(R)$ whose underlying locally ringed space is the prime spectrum of $R$ with the structure sheaf. This scheme is "globally affine" in the sense that the entire space is isomorphic to a spectrum.
+*Natural Language:* For any commutative ring $R$, we can construct a scheme $\mathrm{Spec}(R)$ whose underlying locally ringed space is the prime spectrum of $R$ with the structure sheaf. This scheme is "globally affine" in the sense that the entire space is isomorphic to a spectrum.
 
 == Functoriality
 
@@ -139,7 +139,7 @@ theorem Spec.map_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
   Spec.map (f ≫ g) = Spec.map g ≫ Spec.map f
 ```
 
-*Natural Language:* The Spec construction is functorial: a ring homomorphism $f: R -> S$ induces a scheme morphism $"Spec"(f): "Spec"(S) -> "Spec"(R)$ (note the direction reversal). This makes Spec a contravariant functor from commutative rings to schemes.
+*Natural Language:* The Spec construction is functorial: a ring homomorphism $f: R \to S$ induces a scheme morphism $\mathrm{Spec}(f): \mathrm{Spec}(S) \to \mathrm{Spec}(R)$ (note the direction reversal). This makes Spec a contravariant functor from commutative rings to schemes.
 
 = Basic Opens
 
@@ -151,7 +151,7 @@ def basicOpen : X.Opens :=
     is_open' := ... }
 ```
 
-*Natural Language:* For a section $f in Gamma(X, U)$, the basic open $D(f)$ consists of all points $x in U$ where $f$ becomes a unit in the stalk at $x$. This generalizes the classical notion of basic opens in affine schemes.
+*Natural Language:* For a section $f \in \Gamma(X, U)$, the basic open $D(f)$ consists of all points $x \in U$ where $f$ becomes a unit in the stalk at $x$. This generalizes the classical notion of basic opens in affine schemes.
 
 == Properties
 
@@ -176,7 +176,7 @@ lemma zeroLocus_isClosed {U : X.Opens} (s : Set Γ(X, U)) :
   IsClosed (X.zeroLocus s)
 ```
 
-*Natural Language:* The zero locus $V(s)$ of a set of sections $s subset.eq Gamma(X, U)$ is the set of points where all sections in $s$ vanish. Zero loci are always closed subsets.
+*Natural Language:* The zero locus $V(s)$ of a set of sections $s \subseteq \Gamma(X, U)$ is the set of points where all sections in $s$ vanish. Zero loci are always closed subsets.
 
 == Relationship to Basic Opens
 
@@ -196,9 +196,9 @@ def Γ : Schemeᵒᵖ ⥤ CommRingCat :=
   Scheme.forgetToLocallyRingedSpace.op ⋙ LocallyRingedSpace.Γ
 ```
 
-*Natural Language:* The global sections functor $Gamma$ assigns to each scheme its ring of global sections and to each morphism the induced ring homomorphism. This is a contravariant functor from schemes to commutative rings.
+*Natural Language:* The global sections functor $\Gamma$ assigns to each scheme its ring of global sections and to each morphism the induced ring homomorphism. This is a contravariant functor from schemes to commutative rings.
 
-== Spec-$Gamma$ Identity
+== Spec-$\Gamma$ Identity
 
 ```
 def SpecΓIdentity : Scheme.Spec.rightOp ⋙ Scheme.Γ ≅ 𝟭 \_ := ...
@@ -206,7 +206,7 @@ def SpecΓIdentity : Scheme.Spec.rightOp ⋙ Scheme.Γ ≅ 𝟭 \_ := ...
 def ΓSpecIso : Γ(Spec R, ⊤) ≅ R := SpecΓIdentity.app R
 ```
 
-*Natural Language:* There is a natural isomorphism between the global sections of $"Spec"(R)$ and $R$ itself. This is a fundamental relationship that will be part of the adjunction between $Gamma$ and $"Spec"$.
+*Natural Language:* There is a natural isomorphism between the global sections of $\mathrm{Spec}(R)$ and $R$ itself. This is a fundamental relationship that will be part of the adjunction between $\Gamma$ and $\mathrm{Spec}$.
 
 = Forgetful Functors
 
@@ -249,10 +249,8 @@ instance : Inhabited Scheme
 
 == Field Spectra
 
-```
-instance {K} [Field K] : Unique Spec(K) := ...
+`instance {​K} [Field K] : Unique Spec(K) := ...`
 
-lemma default_asIdeal {K} [Field K] : (default : Spec(K)).asIdeal = ⊥
-```
+`lemma default_asIdeal {​K} [Field K] : (default : Spec(K)).asIdeal = bot`
 
 *Natural Language:* The spectrum of a field is a single point, corresponding to the zero ideal (which is the unique maximal ideal in a field).
